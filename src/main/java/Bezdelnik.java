@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Stream;
 import java.util.stream.IntStream;
+import java.util.NoSuchElementException;
 
 public class Bezdelnik {
     private static List<Task> taskList = new ArrayList<Task>();
@@ -30,7 +31,14 @@ public class Bezdelnik {
         //    input = sc.nextLine().strip();
         //} while (stringParser(input));
         //sc.close();
-        Stream.generate(() -> sc.nextLine().strip())
+
+        Stream.generate(() -> {
+                try {
+                    return sc.nextLine().strip();
+                } catch (NoSuchElementException e) {
+                    return "bye";
+                }
+            })
             .takeWhile(inpt -> stringParser(inpt)) // stop having your stringParser return a boolean
             .forEach(inpt -> {});
         sc.close();
