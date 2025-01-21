@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Stream;
 import java.util.stream.IntStream;
 
 public class Bezdelnik {
@@ -23,24 +25,31 @@ public class Bezdelnik {
 
     private static void inputLoop() {
         Scanner sc = new Scanner(System.in);
-        String input; // can get a NoSuchElementException if Ctrl+D is provided as input???? find out why!
-        do {
-            input = sc.nextLine();
-        } while (stringParser(input));
+        //String input; // can get a NoSuchElementException if Ctrl+D is provided as input. find out why and handle this!
+        //do {
+        //    input = sc.nextLine().strip();
+        //} while (stringParser(input));
+        //sc.close();
+        Stream.generate(() -> sc.nextLine().strip())
+            .takeWhile(inpt -> stringParser(inpt)) // stop having your stringParser return a boolean
+            .forEach(inpt -> {});
         sc.close();
+
     }
 
+    //should probably be its own class...
+    //incredibly ugly string parsing within
     private static boolean stringParser(String input) {
-        if (input.matches("bye.*") || input.matches("/ex.*")) {
+        if (input.matches("bye") || input.matches("/ex")) {
             return false;
-        } else if (input.matches("list.*")) {
+        } else if (input.matches("(list|ls)")) {
             String output = IntStream.range(0, taskList.size())
                 .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
                 .reduce((a, b) -> a + "\n" + b)
                 .orElse("\tNo tasks present!");
             System.out.println(responseFormat(output));
             return true;
-        } else if (input.startsWith("mark")) {
+        } else if (input.matches("mark(\s.*)?")) {
             try {
                 int x = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                 Task newTask = taskList.get(x).markAsDone();
@@ -53,7 +62,7 @@ public class Bezdelnik {
                 System.out.println(responseFormat(
                     String.format("\tInvalid index! Use an integer in [1,%d]", taskList.size())));
             }
-        } else if (input.startsWith("unmark")) {
+        } else if (input.matches("unmark(\s.*)?")) {
             try {
                 int x = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                 Task newTask = taskList.get(x).markAsUndone();
@@ -66,12 +75,50 @@ public class Bezdelnik {
                 System.out.println(responseFormat(
                     String.format("\tInvalid index! Use an integer in [1,%d]", taskList.size())));
             }
-        } else {
-            Task toAdd = new Task(input);
+        } else if (input.matches("todo(\s.*)?")) {
+            // rusty at streams... this is somewhat elegant but is difficult to extend to Deadlines and Events
+            /*
+            Stream.<String>of(input.split(" "))
+                .filter(x -> !x.equals("todo"))
+                .reduce((a,b) -> String.format("%s %s", a, b))
+                .map(x -> new Todo(x))
+                .ifPresentOrElse(x -> {
+                    taskList.add(x);
+                    System.out.println(responseFormat("\tI've added the following todo:\n\t " + x.toString()));
+                },
+                () -> System.out.println(responseFormat("\ttodo must be followed with something to do!")));
+            */
+            input = input.substring(5, input.length());
+            if (input.equals("")) {
+                System.out.println(responseFormat("\ttodo must be followed with something to do!"));
+            } else {
+                Task toAdd = new Todo(input);
+                taskList.add(toAdd);
+                System.out.println(responseFormat(
+                    String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), taskList.size())));
+            }
+        } else if (input.matches("deadline(\s.*)?")) {
+            input = input.substring(9, input.length());
+            String[] array = input.split(" /by ");
+            Task toAdd = new Deadline(array[0], array[1]);
             taskList.add(toAdd);
-            System.out.println(responseFormat("\tadded: " + input));
+            System.out.println(responseFormat(
+                String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), taskList.size())));
+        } else if (input.matches("event(\s.*)?")) {
+            input = input.substring(6, input.length());
+            String[] array = input.split(" /");
+            String description = array[0];
+            String from = array[1];
+            from = from.substring(5, from.length());
+            String to = array[2];
+            to = to.substring(3, to.length());
+            Task toAdd = new Event(description, from, to);
+            taskList.add(toAdd);
+            System.out.println(responseFormat(
+                String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), taskList.size())));
+        } else {
+            System.out.println(responseFormat(String.format("\tUnsupported command: %s", input)));
         }
-
         return true;
     }
 

@@ -1,6 +1,6 @@
-class Task {
-    private final String description;
-    private final boolean isDone;
+abstract class Task {
+    protected final String description;
+    protected final boolean isDone;
 
     Task(String description, boolean isDone) {
         this.description = description;
@@ -11,13 +11,9 @@ class Task {
         this(description, false);
     }
 
-    public Task markAsDone() {
-        return new Task(this.description, true);
-    }
+    abstract public Task markAsDone();
 
-    public Task markAsUndone() {
-        return new Task(this.description, false);
-    }
+    abstract public Task markAsUndone();
 
     @Override
     public String toString() {
