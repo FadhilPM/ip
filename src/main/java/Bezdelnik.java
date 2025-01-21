@@ -23,27 +23,55 @@ public class Bezdelnik {
 
     private static void inputLoop() {
         Scanner sc = new Scanner(System.in);
-        String input = sc.nextLine();
-        while (stringParser(input)) {
+        String input; // can get a NoSuchElementException if Ctrl+D is provided as input???? find out why!
+        do {
             input = sc.nextLine();
-        }
+        } while (stringParser(input));
         sc.close();
     }
 
     private static boolean stringParser(String input) {
-        if (input.equals("bye")) {
+        if (input.matches("bye.*") || input.matches("/ex.*")) {
             return false;
-        } else if (input.equals("list")) {
+        } else if (input.matches("list.*")) {
             String output = IntStream.range(0, taskList.size())
                 .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
                 .reduce((a, b) -> a + "\n" + b)
-                .orElse("No tasks present!");
+                .orElse("\tNo tasks present!");
             System.out.println(responseFormat(output));
             return true;
+        } else if (input.startsWith("mark")) {
+            try {
+                int x = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+                Task newTask = taskList.get(x).markAsDone();
+                taskList.set(x, newTask);
+                System.out.println(responseFormat(
+                    String.format("\tI have marked this task as done.\n\t%s", newTask.toString())));
+            } catch (NumberFormatException n) {
+                System.out.println(responseFormat("\tI'm sorry, that was not a valid integer you specified. Try again!"));
+            } catch (IndexOutOfBoundsException i) {
+                System.out.println(responseFormat(
+                    String.format("\tInvalid index! Use an integer in [1,%d]", taskList.size())));
+            }
+        } else if (input.startsWith("unmark")) {
+            try {
+                int x = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+                Task newTask = taskList.get(x).markAsUndone();
+                taskList.set(x, newTask);
+                System.out.println(responseFormat(
+                    String.format("\tI have marked this task as undone.\n\t%s", newTask.toString())));
+            } catch (NumberFormatException n) {
+                System.out.println(responseFormat("\tI'm sorry, that was not a valid integer you specified. Try again!"));
+            } catch (IndexOutOfBoundsException i) {
+                System.out.println(responseFormat(
+                    String.format("\tInvalid index! Use an integer in [1,%d]", taskList.size())));
+            }
+        } else {
+            Task toAdd = new Task(input);
+            taskList.add(toAdd);
+            System.out.println(responseFormat("\tadded: " + input));
         }
-        Task toAdd = new Task(input);
-        taskList.add(toAdd);
-        System.out.println(responseFormat("\tadded: " + input));
+
         return true;
     }
 
