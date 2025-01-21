@@ -48,7 +48,7 @@ public class Bezdelnik {
     //should probably be its own class...
     //incredibly ugly string parsing within
     private static boolean stringParser(String input) {
-        if (input.matches("bye") || input.matches("/ex")) {
+        if (input.matches("bye") || input.matches("(/)?ex(it)?")) {
             return false;
         } else if (input.matches("(list|ls)")) {
             String output = IntStream.range(0, taskList.size())
@@ -77,6 +77,19 @@ public class Bezdelnik {
                 taskList.set(x, newTask);
                 System.out.println(responseFormat(
                     String.format("\tI have marked this task as undone.\n\t%s", newTask.toString())));
+            } catch (NumberFormatException n) {
+                System.out.println(responseFormat("\tI'm sorry, that was not a valid integer you specified. Try again!"));
+            } catch (IndexOutOfBoundsException i) {
+                System.out.println(responseFormat(
+                    String.format("\tInvalid index! Use an integer in [1,%d]", taskList.size())));
+            }
+        } else if (input.matches("delete(\s.*)?")) {
+            try {
+                int x = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+                Task toDelete = taskList.get(x);
+                taskList.remove(x);
+                System.out.println(responseFormat(
+                    String.format("\tI have deleted this task.\n\t%s", toDelete.toString())));
             } catch (NumberFormatException n) {
                 System.out.println(responseFormat("\tI'm sorry, that was not a valid integer you specified. Try again!"));
             } catch (IndexOutOfBoundsException i) {
