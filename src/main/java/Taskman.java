@@ -2,7 +2,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import java.util.stream.IntStream;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
 import java.util.function.Function;
 
 class Taskman {
@@ -12,12 +11,8 @@ class Taskman {
         this.taskList = List.<Task>of();
     }
 
-    private Taskman(List<Task> taskList) {
-        this.taskList = taskList;
-    }
-
     private Taskman(Stream<Task> taskStream) {
-        this(taskStream.toList());
+        this.taskList = taskStream.toList();
     }
 
     public Taskman add(Task t) {
@@ -30,12 +25,12 @@ class Taskman {
     }
 
     public Taskman remove(int i) {
-        return new Taskman(IntStream.range(0, taskList.size())
-            .filter(x -> x != i)
-            .mapToObj(x -> taskList.get(x)));
+            return new Taskman(IntStream.range(0, taskList.size())
+                .filter(x -> x != i)
+                .mapToObj(x -> taskList.get(x)));
     }
 
-    public Taskman operate(int i, UnaryOperator<Task> fn) {
+    public Taskman operate(int i, Function<Task, Task> fn) {
         return this.set(i, fn.apply(get(i)));
     }
 
@@ -55,11 +50,10 @@ class Taskman {
 
     @Override
     public String toString() {
-        String output = IntStream.range(0, taskList.size())
-        .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
-        .reduce((a, b) -> a + "\n" + b)
-        .orElse("\tNo tasks present!");
-        return output;
+        return IntStream.range(0, taskList.size())
+            .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
+            .reduce((a, b) -> a + "\n" + b)
+            .orElse("\tNo tasks present!");
     }
 
     public String listString() {

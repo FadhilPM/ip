@@ -7,13 +7,13 @@ abstract class Task {
         this.isDone = isDone;
     }
 
-    Task(String description) {
-        this(description, false);
-    }
-
     abstract public Task markAsDone();
 
     abstract public Task markAsUndone();
+
+    public boolean contains(String s) {
+        return description.contains(s);
+    }
 
     @Override
     public String toString() {

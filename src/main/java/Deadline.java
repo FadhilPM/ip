@@ -2,8 +2,7 @@ class Deadline extends Task {
     private String by;
 
     Deadline(String description, String by) {
-        super(description);
-        this.by = by;
+        this(description, false, by);
     }
 
     Deadline(String description, boolean isDone, String by) {
@@ -18,6 +17,7 @@ class Deadline extends Task {
     public Task markAsUndone() {
         return new Deadline(description, by);
     }
+
     @Override
     public String toString() {
         return String.format("[D] %s (by: %s)", super.toString(), this.by);
