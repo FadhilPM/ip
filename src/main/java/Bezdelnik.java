@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Bezdelnik {
     private static final String divider = "_".repeat(100);
     private static final String logo = " _____   _____   _____     _____     _____    ____    _       _   _   _     _   _   _ \n"
@@ -15,7 +17,21 @@ public class Bezdelnik {
     }
 
     private static void inputLoop() {
+        Scanner sc = new Scanner(System.in);
+        String input = sc.nextLine();
+        while (stringParser(input)) {
+            input = sc.nextLine();
+        }
+        sc.close();
 
+    }
+
+    private static boolean stringParser(String input) {
+        if (!input.equals("bye")) {
+            System.out.println(responseFormat(input));
+            return true;
+        }
+        return false;
     }
 
     private static String responseFormat(String input) {
