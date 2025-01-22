@@ -49,71 +49,60 @@ public class Bezdelnik {
         Taskman newTaskman = taskman;
         if (input.matches("bye") || input.matches("(/)?ex(it)?")) {
             return Optional.empty();
-        } else if (input.matches("(list|ls)")) {
-            toReturn = taskList.toString();
-        } else if (input.matches("mark(\s.*)?")) {
-            try {
-                int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
-                newTaskman = newTaskman.operate(i, x -> x.markAsDone());
-                toReturn = String.format("\tI have marked this task as done.\n\t%s", newTaskman.get(i).toString());
-            } catch (NumberFormatException n) {
-                toReturn = "\tI'm sorry, that was not a valid integer you specified. Try again!";
-            } catch (IndexOutOfBoundsException i) {
-                toReturn = String.format("\tInvalid index! Use an integer in [1,%d]", newTaskman.size());
-            }
-        } else if (input.matches("unmark(\s.*)?")) {
-            try {
-                int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
-                newTaskman = newTaskman.operate(i, x -> x.markAsUndone());
-                toReturn = String.format("\tI have marked this task as undone.\n\t%s", newTaskman.get(i).toString());
-            } catch (NumberFormatException n) {
-                toReturn = "\tI'm sorry, that was not a valid integer you specified. Try again!";
-            } catch (IndexOutOfBoundsException i) {
-                toReturn = String.format("\tInvalid index! Use an integer in [1,%d]", newTaskman.size());
-            }
-        } else if (input.matches("delete(\s.*)?")) {
-            try {
-                int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
-                Task toDelete = newTaskman.get(i);
-                newTaskman = newTaskman.remove(i);
-                // the following allows for conditional deletion of tasks with minimal code additions later down the line
-                //taskList = taskList.operateOptional(i, x -> Optional.<Task>empty());
-                toReturn = String.format("\tI have deleted this task.\n\t%s", toDelete.toString());
-            } catch (NumberFormatException n) {
-                toReturn = "\tI'm sorry, that was not a valid integer you specified. Try again!";
-            } catch (IndexOutOfBoundsException i) {
-                toReturn = String.format("\tInvalid index! Use an integer in [1,%d]", newTaskman.size());
-            }
-        } else if (input.matches("todo(\s.*)?")) {
-            input = input.substring(5, input.length());
-            if (input.equals("")) {
-                toReturn = "\ttodo must be followed with something to do!";
-            } else {
-                Task toAdd = new Todo(input);
+        }
+        try {
+            if (input.matches("(list|ls)")) {
+                toReturn = taskList.toString();
+            } else if (input.matches("mark(\s.*)?")) {
+                    int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+                    newTaskman = newTaskman.operate(i, x -> x.markAsDone());
+                    toReturn = String.format("\tI have marked this task as done.\n\t%s", newTaskman.get(i).toString());
+            } else if (input.matches("unmark(\s.*)?")) {
+                    int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+                    newTaskman = newTaskman.operate(i, x -> x.markAsUndone());
+                    toReturn = String.format("\tI have marked this task as undone.\n\t%s", newTaskman.get(i).toString());
+            } else if (input.matches("delete(\s.*)?")) {
+                    int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+                    Task toDelete = newTaskman.get(i);
+                    newTaskman = newTaskman.remove(i);
+                    // the following allows for conditional deletion of tasks with minimal code additions later down the line
+                    //taskList = taskList.operateOptional(i, x -> Optional.<Task>empty());
+                    toReturn = String.format("\tI have deleted this task.\n\t%s", toDelete.toString());
+            } else if (input.matches("todo(\s.*)?")) {
+                input = input.substring(5, input.length());
+                if (input.equals("")) {
+                    toReturn = "\ttodo must be followed with something to do!";
+                } else {
+                    Task toAdd = new Todo(input);
+                    newTaskman = newTaskman.add(toAdd);
+                    toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
+                }
+            } else if (input.matches("deadline(\s.*)?")) {
+                input = input.substring(9, input.length());
+                String[] array = input.split(" /by ");
+                Task toAdd = new Deadline(array[0], array[1]);
                 newTaskman = newTaskman.add(toAdd);
                 toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
+            } else if (input.matches("event(\s.*)?")) {
+                input = input.substring(6, input.length());
+                String[] array = input.split(" /");
+                String description = array[0];
+                String from = array[1];
+                from = from.substring(5, from.length());
+                String to = array[2];
+                to = to.substring(3, to.length());
+                Task toAdd = new Event(description, from, to);
+                newTaskman = newTaskman.add(toAdd);
+                toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
+            } else {
+                toReturn = String.format("\tUnsupported command: %s", input);
             }
-        } else if (input.matches("deadline(\s.*)?")) {
-            input = input.substring(9, input.length());
-            String[] array = input.split(" /by ");
-            Task toAdd = new Deadline(array[0], array[1]);
-            newTaskman = newTaskman.add(toAdd);
-            toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
-        } else if (input.matches("event(\s.*)?")) {
-            input = input.substring(6, input.length());
-            String[] array = input.split(" /");
-            String description = array[0];
-            String from = array[1];
-            from = from.substring(5, from.length());
-            String to = array[2];
-            to = to.substring(3, to.length());
-            Task toAdd = new Event(description, from, to);
-            newTaskman = newTaskman.add(toAdd);
-            toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
-        } else {
-            toReturn = String.format("\tUnsupported command: %s", input);
+        } catch (NumberFormatException n) {
+            toReturn = "\tI'm sorry, that was not a valid integer you specified. Try again!";
+        } catch (IndexOutOfBoundsException i) {
+            toReturn = String.format("\tInvalid index! Use an integer in [1,%d]", newTaskman.size());
         }
-        return Optional.of(new Pair<String, Taskman>(toReturn, newTaskman));
+        return Optional.of(new Pair<>(toReturn, newTaskman));
     }
 
     private static String responseFormat(String input) {
