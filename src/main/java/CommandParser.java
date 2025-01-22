@@ -52,7 +52,7 @@ class CommandParser {
                 }
             }
         } catch (NumberFormatException n) {
-            toReturn = "\tI'm sorry, that was not a valid integer you specified. Try again!";
+            toReturn = "\tInvalid integer!";
         } catch (IndexOutOfBoundsException i) {
             toReturn = String.format("\tInvalid command parameters!");
         }
