@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.Optional;
 
 record Pair<T, U>(T first, U second) {};
 
@@ -12,98 +11,92 @@ public class Bezdelnik {
                   + "|  _  | |  ___|   |_  |  _| |_| |_  |  ___|  | | | | |  _  | |  _  | | | //| | |   (\n"
                   + "| |_| | | |___   ___| | |  _____  | | |___   | | | | | |_| | | | | | | |// | | | |\\ \\\n"
                   + "|_____| |_____| |_____| |_|     |_| |_____|  /_/ |_| |_____| |_| |_| |_ /  |_| |_| \\_\\ ";
-    private static boolean continueLoop;
 
     public static void main(String[] args) {
         String greeting = String.format("%s\nHello from\n%s\n\nWhat can I do for you?\n%s",
                 "_".repeat(104), logo, "_".repeat(104));
         System.out.println(greeting);
-        continueLoop = true;
         inputLoop();
         System.out.println(responseFormat("\tBye. Hope to see you again soon!"));
     }
 
     private static void inputLoop() {
         Scanner sc = new Scanner(System.in);
-        while (continueLoop) {
-            String input = sc.nextLine().strip();
-            stringParser(input, taskList).ifPresentOrElse(
-                pair -> {
+        sc.useDelimiter("\n")
+            .tokens()
+            .map(input -> input.strip())
+            .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
+            .map(input -> stringParser(input, taskList))
+            .forEach(pair ->  {
                     System.out.println(responseFormat(pair.first()));
                     taskList = pair.second();
-                },
-                () -> {
-                     continueLoop = false;
                 }
             );
-        }
         sc.close();
     }
 
     //should probably be its own class...
     //incredibly ugly string parsing within
-    // input: String, Taskman
-    // output: Optional<Pair<String, Taskman>>
-    private static Optional<Pair<String, Taskman>> stringParser(String input, Taskman taskman) {
+    private static Pair<String, Taskman> stringParser(String input, Taskman taskman) {
         String toReturn;
         Taskman newTaskman = taskman;
-        if (input.matches("bye") || input.matches("(/)?ex(it)?")) {
-            return Optional.empty();
-        }
         try {
-            if (input.matches("(list|ls)")) {
-                toReturn = taskList.toString();
-            } else if (input.matches("mark(\s.*)?")) {
+            switch (input.split(" ")[0]) {
+                case "list", "ls" -> {
+                    toReturn = taskList.toString();
+                }
+                case "mark" -> {
                     int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                     newTaskman = newTaskman.operate(i, x -> x.markAsDone());
                     toReturn = String.format("\tI have marked this task as done.\n\t%s", newTaskman.get(i).toString());
-            } else if (input.matches("unmark(\s.*)?")) {
+                }
+                case "unmark" -> {
                     int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                     newTaskman = newTaskman.operate(i, x -> x.markAsUndone());
                     toReturn = String.format("\tI have marked this task as undone.\n\t%s", newTaskman.get(i).toString());
-            } else if (input.matches("delete(\s.*)?")) {
+                }
+                case "delete" -> {
                     int i = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                     Task toDelete = newTaskman.get(i);
                     newTaskman = newTaskman.remove(i);
-                    // the following allows for conditional deletion of tasks with minimal code additions later down the line
-                    //taskList = taskList.operateOptional(i, x -> Optional.<Task>empty());
                     toReturn = String.format("\tI have deleted this task.\n\t%s", toDelete.toString());
-            } else if (input.matches("todo(\s.*)?")) {
-                input = input.substring(5, input.length());
-                if (input.equals("")) {
-                    toReturn = "\ttodo must be followed with something to do!";
-                } else {
-                    Task toAdd = new Todo(input);
+                }
+                case "todo" -> {
+                    String todoInput = input.substring(5);
+                    if (todoInput.isEmpty()) {
+                        toReturn = "\ttodo must be followed with something to do!";
+                    } else {
+                        Task toAdd = new Todo(todoInput);
+                        newTaskman = newTaskman.add(toAdd);
+                        toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
+                    }
+                }
+                case "deadline" -> {
+                    String deadlineInput = input.substring(9);
+                    String[] array = deadlineInput.split(" /by ");
+                    Task toAdd = new Deadline(array[0], array[1]);
                     newTaskman = newTaskman.add(toAdd);
                     toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
                 }
-            } else if (input.matches("deadline(\s.*)?")) {
-                input = input.substring(9, input.length());
-                String[] array = input.split(" /by ");
-                Task toAdd = new Deadline(array[0], array[1]);
-                newTaskman = newTaskman.add(toAdd);
-                toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
-            } else if (input.matches("event(\s.*)?")) {
-                input = input.substring(6, input.length());
-                String[] array = input.split(" /");
-                String description = array[0];
-                String from = array[1];
-                from = from.substring(5, from.length());
-                String to = array[2];
-                to = to.substring(3, to.length());
-                Task toAdd = new Event(description, from, to);
-                newTaskman = newTaskman.add(toAdd);
-                toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
-            } else {
-                toReturn = String.format("\tUnsupported command: %s", input);
+                case "event" -> {
+                    String eventInput = input.substring(6);
+                    String[] array = eventInput.split(" /");
+                    Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
+                    newTaskman = newTaskman.add(toAdd);
+                    toReturn = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd.toString(), newTaskman.size());
+                }
+                default -> {
+                    toReturn = String.format("\tUnsupported command: %s", input);
+                }
             }
         } catch (NumberFormatException n) {
             toReturn = "\tI'm sorry, that was not a valid integer you specified. Try again!";
         } catch (IndexOutOfBoundsException i) {
-            toReturn = String.format("\tInvalid index! Use an integer in [1,%d]", newTaskman.size());
+            toReturn = String.format("\tInvalid command parameters!");
         }
-        return Optional.of(new Pair<>(toReturn, newTaskman));
+        return new Pair<String, Taskman>(toReturn, newTaskman);
     }
+
 
     private static String responseFormat(String input) {
         return String.format("\t%s\n%s\n\t%s", divider, input, divider);
