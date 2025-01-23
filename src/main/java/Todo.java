@@ -16,6 +16,10 @@ class Todo extends Task {
         return new Todo(description);
     }
 
+    public String returnCommand() {
+        return String.format("todo %s", description);
+    }
+
     @Override
     public String toString() {
         return String.format("[T] %s", super.toString());

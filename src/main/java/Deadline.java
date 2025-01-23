@@ -18,6 +18,10 @@ class Deadline extends Task {
         return new Deadline(description, by);
     }
 
+    public String returnCommand() {
+        return String.format("deadline %s /by %s", description, by);
+    }
+
     @Override
     public String toString() {
         return String.format("[D] %s (by: %s)", super.toString(), this.by);

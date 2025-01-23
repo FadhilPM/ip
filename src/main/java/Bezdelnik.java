@@ -1,9 +1,7 @@
 import java.util.Scanner;
 
-record Pair<T, U>(T first, U second) {};
-
 public class Bezdelnik {
-    private static Taskman taskList = new Taskman();
+    private static Taskman taskman = new Taskman();
     private static final String divider = "_".repeat(100);
     private static final String logo = " _____   _____   _____     _____     _____    ____    _       _   _   _     _   _   _ \n"
                    + "|  ___| |  ___| |___  |   |  _  |   |  ___|  |  _ \\  | |     | | | | | |   / | | | / / \n"
@@ -26,10 +24,10 @@ public class Bezdelnik {
             .tokens()
             .map(input -> input.strip())
             .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-            .map(input -> CommandParser.parse(input, taskList))
+            .map(input -> CommandParser.parse(input, taskman))
             .forEach(pair ->  {
                     System.out.println(responseFormat(pair.first()));
-                    taskList = pair.second();
+                    taskman = pair.second();
                 }
             );
         sc.close();
@@ -41,6 +39,6 @@ public class Bezdelnik {
 
     @Override
     public String toString() {
-        return String.format("%s%s", "Bezdelnik\n", taskList.toString());
+        return String.format("%s%s", "Bezdelnik\n", taskman.toString());
     }
 }

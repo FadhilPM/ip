@@ -20,6 +20,10 @@ class Event extends Task {
         return new Event(description, from, to);
     }
 
+    public String returnCommand() {
+        return String.format("event %s /from %s /to %s", description, from, to);
+    }
+
     @Override
     public String toString() {
         return String.format("[E] %s (from: %s to: %s)", super.toString(), this.from, this.to);

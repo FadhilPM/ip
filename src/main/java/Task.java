@@ -1,4 +1,6 @@
-abstract class Task {
+import java.io.Serializable;
+
+abstract class Task implements Serializable {
     protected final String description;
     protected final boolean isDone;
 
@@ -14,6 +16,8 @@ abstract class Task {
     public boolean contains(String s) {
         return description.contains(s);
     }
+
+    abstract public String returnCommand();
 
     @Override
     public String toString() {

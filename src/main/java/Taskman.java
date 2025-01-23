@@ -3,6 +3,7 @@ import java.util.stream.Stream;
 import java.util.stream.IntStream;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 class Taskman {
     private final List<Task> taskList;
@@ -30,14 +31,18 @@ class Taskman {
                 .mapToObj(x -> taskList.get(x)));
     }
 
-    public Taskman operate(int i, Function<Task, Task> fn) {
+    public Taskman operate(int i, Function<? super Task, ? extends Task> fn) {
         return this.set(i, fn.apply(get(i)));
     }
 
-    public Taskman operateOptional(int i, Function<Task, Optional<Task>> fn) {
+    public Taskman operateOptional(int i, Function<? super Task, ? extends Optional<? extends Task>> fn) {
         return fn.apply(taskList.get(i))
             .map(x -> this.set(i, x))
             .orElse(this.remove(i));
+    }
+
+    public Taskman filter(Predicate<Task> pt) {
+        return new Taskman(taskList.stream().filter(pt));
     }
 
     public Task get(int i) {
@@ -48,15 +53,15 @@ class Taskman {
         return taskList.size();
     }
 
-    @Override
-    public String toString() {
+    public String listString() {
         return IntStream.range(0, taskList.size())
             .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
             .reduce((a, b) -> a + "\n" + b)
             .orElse("\tNo tasks present!");
     }
 
-    public String listString() {
+    @Override
+    public String toString() {
         return taskList.toString();
     }
 }
