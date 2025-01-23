@@ -13,6 +13,10 @@ abstract class Task implements Serializable {
 
     abstract public Task markAsUndone();
 
+    public boolean isDone() {
+        return isDone;
+    }
+
     public boolean contains(String s) {
         return description.contains(s);
     }
