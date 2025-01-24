@@ -1,0 +1,13 @@
+list
+todo go to sleep
+deadline finish CS2103 Week 2 iP /by 1600
+event attend CS2103 lecture /from 1600 /to 1800
+mark 1
+list
+mark 2
+list
+unmark 1
+delete 2
+delete 4
+list
+bye
