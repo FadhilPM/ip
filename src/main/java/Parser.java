@@ -1,4 +1,4 @@
-class CommandParser {
+class Parser {
     public static Pair<String, Taskman> parse(String input, Taskman taskman) {
         String toReturn;
         try {

@@ -21,6 +21,7 @@ public class Bezdelnik {
         System.out.println(greeting);
         inputLoop();
         System.out.println(responseFormat("\tBye. Hope to see you again soon!"));
+        //System.out.println(taskman.listCommand());
     }
 
     private static void inputLoop() {
@@ -29,7 +30,7 @@ public class Bezdelnik {
             .tokens()
             .map(input -> input.strip())
             .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-            .map(input -> CommandParser.parse(input, taskman))
+            .map(input -> Parser.parse(input, taskman))
             .forEach(pair -> {
                         System.out.println(responseFormat(pair.first()));
                         taskman = pair.second();
