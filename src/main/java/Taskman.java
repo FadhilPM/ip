@@ -1,9 +1,9 @@
 import java.util.List;
-import java.util.stream.Stream;
-import java.util.stream.IntStream;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 class Taskman {
     private final List<Task> taskList;

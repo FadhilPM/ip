@@ -1,5 +1,9 @@
 import java.util.Scanner;
 
+/**
+ * Main entry point to chatbot
+ *
+ */
 public class Bezdelnik {
     private static Taskman taskman = new Taskman();
     private static final String divider = "_".repeat(100);
@@ -26,9 +30,9 @@ public class Bezdelnik {
             .map(input -> input.strip())
             .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
             .map(input -> CommandParser.parse(input, taskman))
-            .forEach(pair ->  {
-                    System.out.println(responseFormat(pair.first()));
-                    taskman = pair.second();
+            .forEach(pair -> {
+                        System.out.println(responseFormat(pair.first()));
+                        taskman = pair.second();
                     }
             );
         sc.close();
