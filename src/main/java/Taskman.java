@@ -68,6 +68,16 @@ class Taskman {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else if (obj instanceof Taskman taskman) {
+            return taskList.equals(taskman.taskList);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return taskList.toString();
     }
