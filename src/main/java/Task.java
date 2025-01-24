@@ -9,9 +9,9 @@ abstract class Task implements Serializable {
         this.isDone = isDone;
     }
 
-    abstract public Task markAsDone();
+    public abstract Task markAsDone();
 
-    abstract public Task markAsUndone();
+    public abstract Task markAsUndone();
 
     public boolean isDone() {
         return isDone;
@@ -21,7 +21,7 @@ abstract class Task implements Serializable {
         return description.contains(s);
     }
 
-    abstract public String returnCommand();
+    public abstract String returnCommand();
 
     @Override
     public String toString() {

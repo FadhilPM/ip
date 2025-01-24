@@ -1,1 +1,1 @@
-record Pair<T, U>(T first, U second) {};
+record Pair<T, U>(T first, U second) {}

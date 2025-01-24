@@ -26,9 +26,9 @@ class Taskman {
     }
 
     public Taskman remove(int i) {
-            return new Taskman(IntStream.range(0, taskList.size())
-                .filter(x -> x != i)
-                .mapToObj(x -> taskList.get(x)));
+        return new Taskman(IntStream.range(0, taskList.size())
+            .filter(x -> x != i)
+            .mapToObj(x -> taskList.get(x)));
     }
 
     public Taskman operate(int i, Function<? super Task, ? extends Task> fn) {
@@ -43,6 +43,13 @@ class Taskman {
 
     public Taskman filter(Predicate<Task> pt) {
         return new Taskman(taskList.stream().filter(pt));
+    }
+
+    public List<Integer> matchingIndices(Predicate<Task> pt) {
+        return IntStream.range(0, taskList.size())
+            .filter(x -> pt.test(taskList.get(x)))
+            .boxed()
+            .toList();
     }
 
     public Task get(int i) {
