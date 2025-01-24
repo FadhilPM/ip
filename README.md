@@ -1,6 +1,6 @@
 # Bezdelnik
 
-This is a greenfield Java project based on a template named after the Java mascot _Duke_. Given below are instructions on how to use it.
+[Bezdelnik (en: Layabout)](https://www.youtube.com/watch?v=Aa4mlE4VlVk) is a greenfield Java project based on a template named after the Java mascot _Duke_. Given below are instructions on how to use it.
 
 ## Setting up in Intellij
 
