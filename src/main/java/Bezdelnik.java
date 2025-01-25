@@ -16,9 +16,11 @@ public class Bezdelnik {
         + "|_____| |_____| |_____| |_|     |_| |_____|  /_/ |_| |_____| |_| |_| |_ /  |_| |_| \\_\\ ";
     private static final String greeting = String.format("%s\nHello from\n%s\n\nWhat can I do for you?\n%s",
                 "_".repeat(104), logo, "_".repeat(104));
+    private static final String saveLocation = "./data/output.dat";
 
     public static void main(String[] args) {
         System.out.println(greeting);
+        taskman = Storage.readTaskmanFromFile(saveLocation);
         inputLoop();
         System.out.println(responseFormat("\tBye. Hope to see you again soon!"));
     }
@@ -29,10 +31,11 @@ public class Bezdelnik {
             .tokens()
             .map(input -> input.strip())
             .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-            .map(input -> CommandParser.parse(input, taskman))
+            .map(input -> Parser.parse(input, taskman))
             .forEach(pair -> {
                         System.out.println(responseFormat(pair.first()));
                         taskman = pair.second();
+                        Storage.writeTaskmanToFile(taskman, saveLocation);
                     }
             );
         sc.close();

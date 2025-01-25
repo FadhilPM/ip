@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -31,6 +32,10 @@ class Taskman {
             .mapToObj(x -> taskList.get(x)));
     }
 
+    public Taskman concat(Taskman otherTaskman) {
+        return new Taskman(Stream.concat(taskList.stream(), otherTaskman.taskList.stream()));
+    }
+
     public Taskman operate(int i, Function<? super Task, ? extends Task> fn) {
         return this.set(i, fn.apply(get(i)));
     }
@@ -45,13 +50,6 @@ class Taskman {
         return new Taskman(taskList.stream().filter(pt));
     }
 
-    public List<Integer> matchingIndices(Predicate<Task> pt) {
-        return IntStream.range(0, taskList.size())
-            .filter(x -> pt.test(taskList.get(x)))
-            .boxed()
-            .toList();
-    }
-
     public Task get(int i) {
         return taskList.get(i);
     }
@@ -61,10 +59,18 @@ class Taskman {
     }
 
     public String listString() {
-        return IntStream.range(0, taskList.size())
+        return taskList.isEmpty() ? "\tNo tasks present!" : IntStream.range(0, taskList.size())
             .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
-            .reduce((a, b) -> a + "\n" + b)
-            .orElse("\tNo tasks present!");
+            .collect(Collectors.joining("\n"));
+    }
+
+    public String listCommand() {
+        return IntStream.range(0, taskList.size())
+            .mapToObj(x -> {
+                Task t = taskList.get(x);
+                return String.format("%s%s", t.returnCommand(), t.isDone() ? String.format("\nmark %d", x + 1) : "");
+            })
+            .collect(Collectors.joining("\n"));
     }
 
     @Override
