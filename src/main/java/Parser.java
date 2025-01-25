@@ -4,11 +4,11 @@ class Parser {
         try {
             switch (input.split(" ")[0]) {
             case "ls":
-            case "list" : {
+            case "list": {
                 toReturn = taskman.listString();
                 break;
             }
-            case "mark" : {
+            case "mark": {
                 int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                 taskman = taskman.operate(idx, x -> x.markAsDone());
                 toReturn = String.format(
@@ -16,7 +16,7 @@ class Parser {
                     taskman.get(idx).toString());
                 break;
             }
-            case "unmark" : {
+            case "unmark": {
                 int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                 taskman = taskman.operate(idx, x -> x.markAsUndone());
                 toReturn = String.format(
@@ -24,7 +24,7 @@ class Parser {
                     taskman.get(idx).toString());
                 break;
             }
-            case "delete" : {
+            case "delete": {
                 int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
                 Task toDelete = taskman.get(idx);
                 taskman = taskman.remove(idx);
@@ -33,7 +33,7 @@ class Parser {
                     toDelete.toString());
                 break;
             }
-            case "todo" : {
+            case "todo": {
                 String todoInput = input.substring(5);
                 if (todoInput.isEmpty()) {
                     toReturn = "\ttodo must be followed with something to do!";
@@ -46,7 +46,7 @@ class Parser {
                 }
                 break;
             }
-            case "deadline" : {
+            case "deadline": {
                 String deadlineInput = input.substring(9);
                 String[] array = deadlineInput.split(" /by ");
                 Task toAdd = new Deadline(array[0], array[1]);
@@ -56,7 +56,7 @@ class Parser {
                     toAdd.toString(), taskman.size());
                 break;
             }
-            case "event" : {
+            case "event": {
                 String eventInput = input.substring(6);
                 String[] array = eventInput.split(" /");
                 Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
@@ -66,7 +66,7 @@ class Parser {
                     toAdd.toString(), taskman.size());
                 break;
             }
-            default : {
+            default: {
                 toReturn = String.format("\tUnsupported command: %s", input);
                 break;
             }
