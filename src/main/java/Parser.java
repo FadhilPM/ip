@@ -66,6 +66,11 @@ class Parser {
                     toAdd.toString(), taskman.size());
                 break;
             }
+            case "find": {
+                String toSearchFor = input.substring(5);
+                toReturn = taskman.filter(x -> x.contains(toSearchFor)).listString();
+                break;
+            }
             default: {
                 toReturn = String.format("\tUnsupported command: %s", input);
                 break;
