@@ -1,11 +1,24 @@
-class Deadline extends Task {
-    private String by;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    Deadline(String description, String by) {
+class Deadline extends Task {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+    private LocalDateTime by;
+
+    Deadline(String description, String byString) {
+        this(description, false, byString);
+    }
+
+    Deadline(String description, LocalDateTime by) {
         this(description, false, by);
     }
 
-    Deadline(String description, boolean isDone, String by) {
+    Deadline(String description, boolean isDone, String byString) {
+        super(description, isDone);
+        this.by = LocalDateTime.parse(byString, formatter);
+    }
+
+    Deadline(String description, boolean isDone, LocalDateTime by) {
         super(description, isDone);
         this.by = by;
     }
@@ -19,7 +32,7 @@ class Deadline extends Task {
     }
 
     public String returnCommand() {
-        return String.format("deadline %s /by %s", description, by);
+        return String.format("deadline %s /by %s", description, by.format(formatter));
     }
 
     @Override
