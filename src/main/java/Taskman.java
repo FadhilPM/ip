@@ -32,6 +32,10 @@ class Taskman {
             .mapToObj(x -> taskList.get(x)));
     }
 
+    public Taskman concat(Taskman otherTaskman) {
+        return new Taskman(Stream.concat(taskList.stream(), otherTaskman.taskList.stream()));
+    }
+
     public Taskman operate(int i, Function<? super Task, ? extends Task> fn) {
         return this.set(i, fn.apply(get(i)));
     }
