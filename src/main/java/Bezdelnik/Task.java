@@ -1,3 +1,5 @@
+package Bezdelnik;
+
 import java.io.Serializable;
 
 abstract class Task implements Serializable {
