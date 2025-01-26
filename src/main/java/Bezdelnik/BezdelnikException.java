@@ -1,3 +1,5 @@
+package Bezdelnik;
+
 class BezdelnikException extends Exception {
     public BezdelnikException(String message) {
         super(message);

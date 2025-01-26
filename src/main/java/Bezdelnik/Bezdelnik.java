@@ -1,3 +1,5 @@
+package Bezdelnik;
+
 import java.util.Scanner;
 
 /**
