@@ -1,8 +1,5 @@
 package bezdelnik;
 
-import java.util.Scanner;
-import java.util.stream.Stream;
-
 /**
  * Handles UI operations
  */
