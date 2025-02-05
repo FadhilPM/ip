@@ -1,3 +1,9 @@
 package bezdelnik;
 
+/**
+ * Pair record.
+ *
+ * @param <T> The type of the first value.
+ * @param <U> The type of the second value.
+ */
 record Pair<T, U>(T first, U second) {}
