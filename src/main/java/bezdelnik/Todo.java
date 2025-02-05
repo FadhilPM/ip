@@ -1,4 +1,4 @@
-package Bezdelnik;
+package bezdelnik;
 
 class Todo extends Task {
 

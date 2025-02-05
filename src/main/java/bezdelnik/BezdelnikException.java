@@ -1,4 +1,4 @@
-package Bezdelnik;
+package bezdelnik;
 
 class BezdelnikException extends Exception {
     public BezdelnikException(String message) {

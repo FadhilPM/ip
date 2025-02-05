@@ -1,4 +1,4 @@
-package Bezdelnik;
+package bezdelnik;
 
 /**
  * Main entry point to chatbot

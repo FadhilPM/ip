@@ -1,4 +1,4 @@
-package Bezdelnik;
+package bezdelnik;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

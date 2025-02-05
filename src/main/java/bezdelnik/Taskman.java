@@ -1,4 +1,4 @@
-package Bezdelnik;
+package bezdelnik;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,21 +28,26 @@ class Taskman {
             .mapToObj(x -> x == i ? t : taskList.get(x)));
     }
 
-    public Taskman remove(int i) {
-        return new Taskman(IntStream.range(0, taskList.size())
-            .filter(x -> x != i)
-            .mapToObj(x -> taskList.get(x)));
+    public Taskman remove(int i) throws BezdelnikException {
+        try {
+            return new Taskman(IntStream.range(0, taskList.size())
+                .filter(x -> x != i)
+                .mapToObj(x -> taskList.get(x)));
+        } catch (Throwable t) {
+            throw new BezdelnikException(t.toString());
+        }
     }
 
     public Taskman concat(Taskman otherTaskman) {
         return new Taskman(Stream.concat(taskList.stream(), otherTaskman.taskList.stream()));
     }
 
-    public Taskman operate(int i, Function<? super Task, ? extends Task> fn) {
+    public Taskman operate(int i, Function<? super Task, ? extends Task> fn) throws BezdelnikException {
         return this.set(i, fn.apply(get(i)));
     }
 
-    public Taskman operateOptional(int i, Function<? super Task, ? extends Optional<? extends Task>> fn) {
+    public Taskman operateOptional(int i, Function<? super Task, ? extends Optional<? extends Task>> fn)
+            throws BezdelnikException {
         return fn.apply(taskList.get(i))
             .map(x -> this.set(i, x))
             .orElse(this.remove(i));
@@ -52,8 +57,12 @@ class Taskman {
         return new Taskman(taskList.stream().filter(pt));
     }
 
-    public Task get(int i) {
-        return taskList.get(i);
+    public Task get(int i) throws BezdelnikException {
+        try {
+            return taskList.get(i);
+        } catch (Throwable t) {
+            throw new BezdelnikException(t.toString());
+        }
     }
 
     public int size() {
