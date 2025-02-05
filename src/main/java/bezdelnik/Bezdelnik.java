@@ -32,17 +32,17 @@ public class Bezdelnik {
     private static void inputLoop(String sessionStatus) {
         Ui.greet(sessionStatus);
         Ui.takeInput()
-        .map(input -> Parser.parse(input, taskman))
-        .forEach(pair -> {
-            Ui.print(pair.first());
-            taskman = pair.second();
-            try {
-                Storage.writeTaskmanToFile(taskman, saveLocation);
-            } catch (Throwable e) {
-                Ui.print(String.format("Unknown exception when saving data.", e.toString()));
+            .map(input -> Parser.parse(input, taskman))
+            .forEach(pair -> {
+                Ui.print(pair.first());
+                taskman = pair.second();
+                try {
+                    Storage.writeTaskmanToFile(taskman, saveLocation);
+                } catch (Throwable e) {
+                    Ui.print(String.format("Unknown exception when saving data.", e.toString()));
+                }
             }
-        }
-        );
+            );
         Ui.bye();
     }
 }

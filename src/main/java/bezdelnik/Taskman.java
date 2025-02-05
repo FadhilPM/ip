@@ -100,7 +100,7 @@ class Taskman {
      * @throws BezdelnikException If the index is out of bounds.
      */
     public Taskman operateOptional(int i, Function<? super Task, ? extends Optional<? extends Task>> fn)
-    throws BezdelnikException {
+            throws BezdelnikException {
         return fn.apply(taskList.get(i))
         .map(x -> this.set(i, x))
         .orElse(this.remove(i));

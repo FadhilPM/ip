@@ -15,30 +15,30 @@ class Parser {
         try {
             String command = input.split(" ")[0];
             switch (command) {
-                case "ls":
-                case "list":
-                    return handleList(taskman);
-                case "m":
-                case "mark":
-                    return handleMark(input, taskman);
-                case "u":
-                case "unmark":
-                    return handleUnmark(input, taskman);
-                case "rem":
-                case "remove":
-                case "del":
-                case "delete":
-                    return handleRemove(input, taskman);
-                case "todo":
-                    return handleTodo(input, taskman);
-                case "deadline":
-                    return handleDeadline(input, taskman);
-                case "event":
-                    return handleEvent(input, taskman);
-                case "find":
-                    return handleFind(input, taskman);
-                default:
-                    return handleDefault(input, taskman);
+            case "ls":
+            case "list":
+                return handleList(taskman);
+            case "m":
+            case "mark":
+                return handleMark(input, taskman);
+            case "u":
+            case "unmark":
+                return handleUnmark(input, taskman);
+            case "rem":
+            case "remove":
+            case "del":
+            case "delete":
+                return handleRemove(input, taskman);
+            case "todo":
+                return handleTodo(input, taskman);
+            case "deadline":
+                return handleDeadline(input, taskman);
+            case "event":
+                return handleEvent(input, taskman);
+            case "find":
+                return handleFind(input, taskman);
+            default:
+                return handleDefault(input, taskman);
             }
         } catch (NumberFormatException n) {
             return new Pair<String, Taskman>("\tInvalid integer!", taskman);
