@@ -1,5 +1,7 @@
 package bezdelnik;
 
+import java.util.Scanner;
+
 /**
  * Main entry point for chatbot
  * Initializes task manager, loads prior data if present,
@@ -31,7 +33,11 @@ public class Bezdelnik {
      */
     private static void inputLoop(String sessionStatus) {
         Ui.greet(sessionStatus);
-        Ui.takeInput()
+        Scanner sc = new Scanner(System.in);
+        sc.useDelimiter("\n")
+            .tokens()
+            .map(input -> input.strip())
+            .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
             .map(input -> Parser.parse(input, taskman))
             .forEach(pair -> {
                 Ui.print(pair.first());
@@ -43,6 +49,7 @@ public class Bezdelnik {
                 }
             }
             );
+        sc.close();
         Ui.bye();
     }
 }

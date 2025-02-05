@@ -42,20 +42,6 @@ class Ui {
     }
 
     /**
-     * Reads user input from the console until an exit command is entered.
-     *
-     * @return A Stream of input lines.
-     */
-    public static Stream<String> takeInput() {
-        // This scanner's lifetime coincides with the application closing.
-        Scanner sc = new Scanner(System.in);
-        return sc.useDelimiter("\n")
-        .tokens()
-        .map(input -> input.strip())
-        .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"));
-    }
-
-    /**
      * Formats the response with dividers.
      *
      * @param input The input message to format.
