@@ -3,7 +3,7 @@ package bezdelnik;
 /**
  * Represents a simple Todo task.
  */
-class Todo extends Task {
+public class Todo extends Task {
 
     /**
      * Constructs a new Todo with the given description.

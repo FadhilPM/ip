@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 /**
  * Handles storage operations for chatbot
  */
-class Storage {
+public class Storage {
     /**
      * Writes the task manager state to a file at the specified output path.
      *

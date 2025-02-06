@@ -4,7 +4,7 @@ package bezdelnik;
  * Exception specific to the Bezdelnik application.
  * This exception is thrown when a task management error occurs.
  */
-class BezdelnikException extends Exception {
+public class BezdelnikException extends Exception {
 
     /**
      * Constructs a new BezdelnikException with the specified detail message.

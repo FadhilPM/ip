@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Represents an abstract task in the Bezdelnik application.
  * Each task has a description and a completion status.
  */
-abstract class Task implements Serializable {
+public abstract class Task implements Serializable {
     protected final String description;
     protected final boolean isDone;
 

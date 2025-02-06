@@ -3,7 +3,7 @@ package bezdelnik;
 /**
  * Handles UI operations
  */
-class Ui {
+public class Ui {
     private static final String divider = "_".repeat(100);
     private static final String logo =
         " _____   _____   _____     _____     _____    ____    _       _   _   _     _   _   _ \n"

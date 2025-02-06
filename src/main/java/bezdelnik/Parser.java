@@ -3,7 +3,7 @@ package bezdelnik;
 /**
  * Provides public static method to parse user input commands and update the task manager.
  */
-class Parser {
+public class Parser {
     /**
      * Parses the given input string and performs the corresponding task management operation.
      *

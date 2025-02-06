@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 /**
  * Immutable Task list manager
  */
-class Taskman {
+public class Taskman {
     private final List<Task> taskList;
 
     /**
