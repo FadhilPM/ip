@@ -21,3 +21,11 @@ text-ui-test/EXPECTED-UNIX.TXT
 *.kate-swp
 
 src/main/java/data/
+
+.classpath
+
+*.prefs
+
+*.gz
+
+.project
