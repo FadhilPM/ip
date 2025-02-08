@@ -1,10 +1,11 @@
 package bezdelnik;
 
+import java.time.LocalDateTime;
+
 /**
  * Represents a simple Todo task.
  */
 public class Todo extends Task {
-
     /**
      * Constructs a new Todo with the given description.
      *
@@ -30,6 +31,10 @@ public class Todo extends Task {
 
     public Task markAsUndone() {
         return new Todo(description);
+    }
+
+    public LocalDateTime getStartTime() {
+        return LocalDateTime.MAX;
     }
 
     public String returnCommand() {

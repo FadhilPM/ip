@@ -1,12 +1,13 @@
 package bezdelnik;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Represents an abstract task in the Bezdelnik application.
  * Each task has a description and a completion status.
  */
-public abstract class Task implements Serializable {
+public abstract class Task implements Serializable, Comparable<Task> {
     protected final String description;
     protected final boolean isDone;
 
@@ -60,6 +61,12 @@ public abstract class Task implements Serializable {
      * @return A string command to recreate this task.
      */
     public abstract String returnCommand();
+
+    public abstract LocalDateTime getStartTime();
+
+    public int compareTo(Task otherTask) {
+        return otherTask.getStartTime().compareTo(this.getStartTime());
+    }
 
     @Override
     public String toString() {

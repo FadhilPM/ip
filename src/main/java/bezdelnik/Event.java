@@ -70,6 +70,10 @@ public class Event extends Task {
         return new Event(description, from, to);
     }
 
+    public LocalDateTime getStartTime() {
+        return this.from;
+    }
+
     public String returnCommand() {
         return String.format("event %s /from %s /to %s", description, from.format(formatter), to.format(formatter));
     }

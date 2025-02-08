@@ -16,20 +16,22 @@ public class Parser {
         DEADLINE,
         EVENT,
         FIND,
+        SORT,
         UNKNOWN
     }
 
     private static CommandType determineCommandType(String input) {
         String command = input.split(" ")[0].toLowerCase();
         return switch (command) {
-        case "ls", "list" -> CommandType.LIST;
+        case "l", "ls", "list" -> CommandType.LIST;
         case "m", "mark" -> CommandType.MARK;
         case "u", "unmark" -> CommandType.UNMARK;
         case "rem", "remove", "del", "delete" -> CommandType.REMOVE;
         case "todo" -> CommandType.TODO;
-        case "deadline" -> CommandType.DEADLINE;
-        case "event" -> CommandType.EVENT;
-        case "find" -> CommandType.FIND;
+        case "ded", "dead", "deadline" -> CommandType.DEADLINE;
+        case "e", "ev", "event" -> CommandType.EVENT;
+        case "f", "find" -> CommandType.FIND;
+        case "s", "sort" -> CommandType.SORT;
         default -> CommandType.UNKNOWN;
         };
     }
@@ -57,6 +59,7 @@ public class Parser {
             case DEADLINE -> handleDeadline(input, taskman);
             case EVENT -> handleEvent(input, taskman);
             case FIND -> handleFind(input, taskman);
+            case SORT -> handleSort(taskman);
             case UNKNOWN -> handleDefault(input, taskman);
             };
         } catch (NumberFormatException n) {
@@ -170,7 +173,7 @@ public class Parser {
     private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) {
         String eventInput = removeFirstWord(input);
         String[] array = eventInput.split(" /");
-        // Assumes array[1] starts with "at " and array[2] starts with "on "
+        // Assumes array[1] starts with "from " and array[2] starts with "to "
         Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
         taskman = taskman.add(toAdd);
         String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
@@ -187,6 +190,18 @@ public class Parser {
     private static Pair<String, Taskman> handleFind(String input, Taskman taskman) {
         String toSearchFor = removeFirstWord(input);
         String output = taskman.filter(x -> x.contains(toSearchFor)).listString();
+        return new Pair<String, Taskman>(output, taskman);
+    }
+
+    /**
+     * Returns a Pair containing the list of tasks and the sorted task manager.
+     *
+     * @param taskman The current task manager state.
+     * @return A Pair with a confirmation message and the task list as a formatted string and the sorted task manager.
+     */
+    private static Pair<String, Taskman> handleSort(Taskman taskman) {
+        taskman = taskman.sorted();
+        String output = "\tTasks sorted by time\n" + taskman.listString();;
         return new Pair<String, Taskman>(output, taskman);
     }
 

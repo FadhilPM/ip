@@ -117,6 +117,15 @@ public class Taskman {
     }
 
     /**
+     * Returns a new Taskman with a sorted task list
+     *
+     * @return A new Taskman instance with a {@code List<Task>}
+     */
+    public Taskman sorted() {
+        return new Taskman(taskList.stream().sorted());
+    }
+
+    /**
      * Retrieves the task at the specified index.
      *
      * @param i The index of the task.

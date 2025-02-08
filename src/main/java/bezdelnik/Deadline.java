@@ -63,6 +63,10 @@ public class Deadline extends Task {
         return new Deadline(description, by);
     }
 
+    public LocalDateTime getStartTime() {
+        return this.by;
+    }
+
     public String returnCommand() {
         return String.format("deadline %s /by %s", description, by.format(formatter));
     }
