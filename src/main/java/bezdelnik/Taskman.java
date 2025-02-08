@@ -112,7 +112,7 @@ public class Taskman {
      * @param pt The predicate to filter tasks.
      * @return A new Taskman instance with filtered tasks.
      */
-    public Taskman filter(Predicate<Task> pt) {
+    public Taskman filter(Predicate<? super Task> pt) {
         return new Taskman(taskList.stream().filter(pt));
     }
 

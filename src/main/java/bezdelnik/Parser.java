@@ -1,9 +1,43 @@
 package bezdelnik;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * Provides public static method to parse user input commands and update the task manager.
  */
 public class Parser {
+    enum CommandType {
+        LIST,
+        MARK,
+        UNMARK,
+        REMOVE,
+        TODO,
+        DEADLINE,
+        EVENT,
+        FIND,
+        UNKNOWN
+    }
+
+    private static CommandType determineCommandType(String input) {
+        String command = input.split(" ")[0].toLowerCase();
+        return switch (command) {
+        case "ls", "list" -> CommandType.LIST;
+        case "m", "mark" -> CommandType.MARK;
+        case "u", "unmark" -> CommandType.UNMARK;
+        case "rem", "remove", "del", "delete" -> CommandType.REMOVE;
+        case "todo" -> CommandType.TODO;
+        case "deadline" -> CommandType.DEADLINE;
+        case "event" -> CommandType.EVENT;
+        case "find" -> CommandType.FIND;
+        default -> CommandType.UNKNOWN;
+        };
+    }
+
+    private static String removeFirstWord(String input) {
+        return Arrays.stream(input.split(" ")).skip(1).collect(Collectors.joining(" "));
+    }
+
     /**
      * Parses the given input string and performs the corresponding task management operation.
      *
@@ -12,34 +46,19 @@ public class Parser {
      * @return A Pair containing a response message and the updated task manager.
      */
     public static Pair<String, Taskman> parse(String input, Taskman taskman) {
+        CommandType commandType = determineCommandType(input);
         try {
-            String command = input.split(" ")[0];
-            switch (command) {
-            case "ls":
-            case "list":
-                return handleList(taskman);
-            case "m":
-            case "mark":
-                return handleMark(input, taskman);
-            case "u":
-            case "unmark":
-                return handleUnmark(input, taskman);
-            case "rem":
-            case "remove":
-            case "del":
-            case "delete":
-                return handleRemove(input, taskman);
-            case "todo":
-                return handleTodo(input, taskman);
-            case "deadline":
-                return handleDeadline(input, taskman);
-            case "event":
-                return handleEvent(input, taskman);
-            case "find":
-                return handleFind(input, taskman);
-            default:
-                return handleDefault(input, taskman);
-            }
+            return switch (commandType) {
+            case LIST -> handleList(taskman);
+            case MARK -> handleMark(input, taskman);
+            case UNMARK -> handleUnmark(input, taskman);
+            case REMOVE -> handleRemove(input, taskman);
+            case TODO -> handleTodo(input, taskman);
+            case DEADLINE -> handleDeadline(input, taskman);
+            case EVENT -> handleEvent(input, taskman);
+            case FIND -> handleFind(input, taskman);
+            case UNKNOWN -> handleDefault(input, taskman);
+            };
         } catch (NumberFormatException n) {
             return new Pair<String, Taskman>("\tInvalid integer!", taskman);
         } catch (IndexOutOfBoundsException i) {
@@ -114,7 +133,7 @@ public class Parser {
      * @return A Pair with a confirmation message and the updated task manager.
      */
     private static Pair<String, Taskman> handleTodo(String input, Taskman taskman) {
-        String todoInput = input.substring(5);
+        String todoInput = removeFirstWord(input);
         if (todoInput.isEmpty()) {
             return new Pair<String, Taskman>("\ttodo must be followed with something to do!", taskman);
         } else {
@@ -133,7 +152,7 @@ public class Parser {
      * @return A Pair with a confirmation message and the updated task manager.
      */
     private static Pair<String, Taskman> handleDeadline(String input, Taskman taskman) {
-        String deadlineInput = input.substring(9);
+        String deadlineInput = removeFirstWord(input);
         String[] array = deadlineInput.split(" /by ");
         Task toAdd = new Deadline(array[0], array[1]);
         taskman = taskman.add(toAdd);
@@ -149,7 +168,7 @@ public class Parser {
      * @return A Pair with a confirmation message and the updated task manager.
      */
     private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) {
-        String eventInput = input.substring(6);
+        String eventInput = removeFirstWord(input);
         String[] array = eventInput.split(" /");
         // Assumes array[1] starts with "at " and array[2] starts with "on "
         Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
@@ -166,7 +185,7 @@ public class Parser {
      * @return A Pair with the filtered task list as a formatted string and the unchanged task manager.
      */
     private static Pair<String, Taskman> handleFind(String input, Taskman taskman) {
-        String toSearchFor = input.substring(5);
+        String toSearchFor = removeFirstWord(input);
         String output = taskman.filter(x -> x.contains(toSearchFor)).listString();
         return new Pair<String, Taskman>(output, taskman);
     }
