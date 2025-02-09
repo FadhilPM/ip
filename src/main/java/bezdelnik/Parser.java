@@ -17,6 +17,7 @@ public class Parser {
         EVENT,
         FIND,
         SORT,
+        ARCHIVE,
         UNKNOWN
     }
 
@@ -32,6 +33,7 @@ public class Parser {
         case "e", "ev", "event" -> CommandType.EVENT;
         case "f", "find" -> CommandType.FIND;
         case "s", "sort" -> CommandType.SORT;
+        case "a", "archive" -> CommandType.ARCHIVE;
         default -> CommandType.UNKNOWN;
         };
     }
@@ -60,6 +62,7 @@ public class Parser {
             case EVENT -> handleEvent(input, taskman);
             case FIND -> handleFind(input, taskman);
             case SORT -> handleSort(taskman);
+            case ARCHIVE -> handleArchive(input, taskman);
             case UNKNOWN -> handleDefault(input, taskman);
             };
         } catch (NumberFormatException n) {
@@ -203,6 +206,17 @@ public class Parser {
         taskman = taskman.sorted();
         String output = "\tTasks sorted by time\n" + taskman.listString();;
         return new Pair<String, Taskman>(output, taskman);
+    }
+
+    private static Pair<String, Taskman> handleArchive(String input, Taskman taskman) throws BezdelnikException {
+        String path = "./data/" + removeFirstWord(input);
+        try {
+            Storage.writeTaskmanToFile(taskman, path);
+            String output = String.format("\tTask list archived to: %s. You have turned over a new leaf.", path);
+            return new Pair<String, Taskman>(output, new Taskman());
+        } catch (Throwable t) {
+            throw new BezdelnikException(String.format("Unknown error accessing path: %s.", path));
+        }
     }
 
     /**
