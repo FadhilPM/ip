@@ -30,7 +30,7 @@ public class Bezdelnik {
         try {
             readAttempt = Storage.readTaskmanFromFile(saveLocation);
         } catch (Throwable e) {
-            readAttempt = new Pair<String, Taskman>("        No prior data found, creating new session", new Taskman());
+            readAttempt = new Pair<String, Taskman>("No prior data found, creating new session", new Taskman());
         }
         taskman = readAttempt.second();
         return readAttempt.first();

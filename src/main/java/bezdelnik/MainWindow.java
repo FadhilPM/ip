@@ -31,8 +31,9 @@ public class MainWindow extends AnchorPane {
     }
 
     public void setBezdelnik(Bezdelnik b) {
-        b.initialise();
+        String response = b.initialise();
         bezdelnik = b;
+        dialogContainer.getChildren().addAll(DialogBox.getDukeDialog(response, dukeImage));
     }
 
     @FXML

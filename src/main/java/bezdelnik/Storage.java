@@ -35,7 +35,7 @@ public class Storage {
     public static Pair<String, Taskman> readTaskmanFromFile(String inputPath) throws IOException {
         Taskman toReturn = Files.lines(Paths.get(inputPath))
             .reduce(new Taskman(), (x, y) -> Parser.parse(y, x).second(), (a, b) -> a.concat(b));
-        String status = String.format("        Tasks successfully loaded from %s", inputPath);
+        String status = String.format("Tasks successfully loaded from %s", inputPath);
         return new Pair<String, Taskman>(status, toReturn);
     }
 }
