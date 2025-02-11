@@ -22,6 +22,10 @@ public class Bezdelnik {
     }
 
     public void run() {
+        inputLoop(initialise());
+    }
+
+    public String initialise() {
         Pair<String, Taskman> readAttempt;
         try {
             readAttempt = Storage.readTaskmanFromFile(saveLocation);
@@ -29,7 +33,7 @@ public class Bezdelnik {
             readAttempt = new Pair<String, Taskman>("        No prior data found, creating new session", new Taskman());
         }
         taskman = readAttempt.second();
-        inputLoop(readAttempt.first());
+        return readAttempt.first();
     }
 
     /**
@@ -49,7 +53,7 @@ public class Bezdelnik {
         Ui.bye();
     }
 
-    private String getResponse(String input) {
+    public String getResponse(String input) {
         Pair<String, Taskman> parserOutput = Parser.parse(input, taskman);
         taskman = parserOutput.second();
         try {
