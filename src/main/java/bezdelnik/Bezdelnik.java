@@ -17,13 +17,23 @@ public class Bezdelnik {
      * @param args Command-line arguments.
      */
     public static void main(String[] args) {
+        Bezdelnik bezdelnik = new Bezdelnik();
+        bezdelnik.run();
+    }
+
+    public void run() {
+        inputLoop(initialise());
+    }
+
+    public String initialise() {
         Pair<String, Taskman> readAttempt;
         try {
             readAttempt = Storage.readTaskmanFromFile(saveLocation);
         } catch (Throwable e) {
             readAttempt = new Pair<String, Taskman>("        No prior data found, creating new session", new Taskman());
         }
-        inputLoop(readAttempt.first());
+        taskman = readAttempt.second();
+        return readAttempt.first();
     }
 
     /**
@@ -31,25 +41,26 @@ public class Bezdelnik {
      *
      * @param sessionStatus Initial session status message.
      */
-    private static void inputLoop(String sessionStatus) {
+    private void inputLoop(String sessionStatus) {
         Ui.greet(sessionStatus);
         Scanner sc = new Scanner(System.in);
         sc.useDelimiter("\n")
             .tokens()
             .map(input -> input.strip())
             .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-            .map(input -> Parser.parse(input, taskman))
-            .forEach(pair -> {
-                Ui.print(pair.first());
-                taskman = pair.second();
-                try {
-                    Storage.writeTaskmanToFile(taskman, saveLocation);
-                } catch (Throwable e) {
-                    Ui.print(String.format("Unknown exception when saving data.", e.toString()));
-                }
-            }
-            );
+            .forEach(input -> Ui.print(getResponse(input)));
         sc.close();
         Ui.bye();
+    }
+
+    public String getResponse(String input) {
+        Pair<String, Taskman> parserOutput = Parser.parse(input, taskman);
+        taskman = parserOutput.second();
+        try {
+            Storage.writeTaskmanToFile(taskman, saveLocation);
+        } catch (Throwable e) {
+            Ui.print(String.format("Unknown exception when saving data.", e.toString()));
+        }
+        return parserOutput.first();
     }
 }
