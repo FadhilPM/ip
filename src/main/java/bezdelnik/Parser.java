@@ -50,6 +50,8 @@ public class Parser {
      * @return A Pair containing a response message and the updated task manager.
      */
     public static Pair<String, Taskman> parse(String input, Taskman taskman) {
+        assert taskman != null;
+
         CommandType commandType = determineCommandType(input);
         try {
             return switch (commandType) {
