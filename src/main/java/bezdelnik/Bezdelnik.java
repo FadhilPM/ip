@@ -25,6 +25,9 @@ public class Bezdelnik {
         inputLoop(initialise());
     }
 
+    /**
+     * Attempts to load data from save location.
+     */
     public String initialise() {
         Pair<String, Taskman> readAttempt;
         try {

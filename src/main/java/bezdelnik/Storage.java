@@ -18,6 +18,9 @@ public class Storage {
      * @throws IOException If an I/O error occurs.
      */
     public static String writeTaskmanToFile(Taskman taskman, String outputPath) throws IOException {
+        assert taskman != null;
+        assert outputPath != null;
+
         Path path = Paths.get(outputPath);
         Files.createDirectories(path.getParent());
         String content = taskman.listCommand();
@@ -33,6 +36,7 @@ public class Storage {
      * @throws IOException If an I/O error occurs.
      */
     public static Pair<String, Taskman> readTaskmanFromFile(String inputPath) throws IOException {
+        assert inputPath != null;
         Taskman toReturn = Files.lines(Paths.get(inputPath))
             .reduce(new Taskman(), (x, y) -> Parser.parse(y, x).second(), (a, b) -> a.concat(b));
         String status = String.format("Tasks successfully loaded from %s", inputPath);
