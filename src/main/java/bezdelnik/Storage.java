@@ -36,6 +36,7 @@ public class Storage {
      * @throws IOException If an I/O error occurs.
      */
     public static Pair<String, Taskman> readTaskmanFromFile(String inputPath) throws IOException {
+        assert inputPath != null;
         Taskman toReturn = Files.lines(Paths.get(inputPath))
             .reduce(new Taskman(), (x, y) -> Parser.parse(y, x).second(), (a, b) -> a.concat(b));
         String status = String.format("Tasks successfully loaded from %s", inputPath);

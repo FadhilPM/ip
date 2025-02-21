@@ -88,6 +88,7 @@ public class Taskman {
      * @throws BezdelnikException If the index is out of bounds.
      */
     public Taskman operate(int i, Function<? super Task, ? extends Task> fn) throws BezdelnikException {
+        assert fn != null;
         return this.set(i, fn.apply(get(i)));
     }
 
@@ -101,6 +102,7 @@ public class Taskman {
      */
     public Taskman operateOptional(int i, Function<? super Task, ? extends Optional<? extends Task>> fn)
             throws BezdelnikException {
+        assert fn != null;
         return fn.apply(taskList.get(i))
         .map(x -> this.set(i, x))
         .orElse(this.remove(i));
@@ -113,6 +115,7 @@ public class Taskman {
      * @return A new Taskman instance with filtered tasks.
      */
     public Taskman filter(Predicate<? super Task> pt) {
+        assert pt != null;
         return new Taskman(taskList.stream().filter(pt));
     }
 
@@ -133,6 +136,7 @@ public class Taskman {
      * @throws BezdelnikException If the index is out of bounds.
      */
     public Task get(int i) throws BezdelnikException {
+        assert i > -1;
         try {
             return taskList.get(i);
         } catch (Throwable t) {
