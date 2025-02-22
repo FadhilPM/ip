@@ -56,7 +56,7 @@ public class Taskman {
         return new Taskman(IntStream.range(0, taskList.size())
         .mapToObj(x -> {
             if (x == i) {
-                return t;
+                return task;
             } else {
                 return taskList.get(x);
             }
