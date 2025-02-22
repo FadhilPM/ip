@@ -1,5 +1,4 @@
 package bezdelnik;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -49,7 +48,13 @@ public class Taskman {
      */
     public Taskman set(int i, Task t) {
         return new Taskman(IntStream.range(0, taskList.size())
-        .mapToObj(x -> x == i ? t : taskList.get(x)));
+        .mapToObj(x -> {
+            if (x == i) {
+                return t;
+            } else {
+                return taskList.get(x);
+            }
+        }));
     }
 
     /**
@@ -159,9 +164,13 @@ public class Taskman {
      * @return A string representation of the task list.
      */
     public String listString() {
-        return taskList.isEmpty() ? "\tNo tasks present!" : IntStream.range(0, taskList.size())
-        .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
-        .collect(Collectors.joining("\n"));
+        if (taskList.isEmpty()) {
+            return "\tNo tasks present!";
+        } else {
+            return IntStream.range(0, taskList.size())
+            .mapToObj(x -> String.format("\t%d. %s", x + 1, taskList.get(x).toString()))
+            .collect(Collectors.joining("\n"));
+        }
     }
 
     /**
@@ -173,7 +182,12 @@ public class Taskman {
         return IntStream.range(0, taskList.size())
         .mapToObj(x -> {
             Task t = taskList.get(x);
-            return String.format("%s%s", t.returnCommand(), t.isDone() ? String.format("\nmark %d", x + 1) : "");
+            String command = t.returnCommand();
+            String markString = "";
+            if (t.isDone()) {
+                markString = String.format("\nmark %d", x + 1);
+            }
+            return command + markString;
         })
         .collect(Collectors.joining("\n"));
     }
@@ -186,7 +200,13 @@ public class Taskman {
      */
     @Override
     public boolean equals(Object obj) {
-        return this == obj ? true : (obj instanceof Taskman taskman) ? taskList.equals(taskman.taskList) : false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof Taskman taskman) {
+            return taskList.equals(taskman.taskList);
+        }
+        return false;
     }
 
     @Override
