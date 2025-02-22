@@ -21,11 +21,14 @@ public class Storage {
         assert taskman != null;
         assert outputPath != null;
 
+        String taskCommands = taskman.listCommand();
+
         Path path = Paths.get(outputPath);
         Files.createDirectories(path.getParent());
-        String content = taskman.listCommand();
-        Files.writeString(path, content);
-        return String.format("Success: contents written to file at: %s", outputPath);
+        Files.writeString(path, taskCommands);
+
+        String status = String.format("Success: contents written to file at: %s", outputPath);
+        return status;
     }
 
     /**
@@ -37,9 +40,11 @@ public class Storage {
      */
     public static Pair<String, Taskman> readTaskmanFromFile(String inputPath) throws IOException {
         assert inputPath != null;
+
         Taskman toReturn = Files.lines(Paths.get(inputPath))
             .reduce(new Taskman(), (x, y) -> Parser.parse(y, x).second(), (a, b) -> a.concat(b));
-        String status = String.format("Tasks successfully loaded from %s", inputPath);
+
+        String status = String.format("Success: Tasks successfully loaded from %s", inputPath);
         return new Pair<String, Taskman>(status, toReturn);
     }
 }
