@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Represents an abstract task in the Bezdelnik application.
  * Each task has a description and a completion status.
  */
-public abstract class Task implements Serializable, Comparable<Task> {
+public abstract class Task implements Comparable<Task> {
     protected final String description;
     protected final boolean isDone;
 
