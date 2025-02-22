@@ -39,7 +39,9 @@ public class Parser {
     }
 
     private static String removeFirstWord(String input) {
-        return Arrays.stream(input.split(" ")).skip(1).collect(Collectors.joining(" "));
+        return Arrays.stream(input.split(" "))
+            .skip(1)
+            .collect(Collectors.joining(" "));
     }
 
     /**
@@ -97,7 +99,9 @@ public class Parser {
      */
     private static Pair<String, Taskman> handleMark(String input, Taskman taskman) throws BezdelnikException {
         int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+
         taskman = taskman.operate(idx, x -> x.markAsDone());
+
         String output = String.format("\tI have marked this task as done.\n\t%s", taskman.get(idx));
         return new Pair<String, Taskman>(output, taskman);
     }
@@ -112,7 +116,9 @@ public class Parser {
      */
     private static Pair<String, Taskman> handleUnmark(String input, Taskman taskman) throws BezdelnikException {
         int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+
         taskman = taskman.operate(idx, x -> x.markAsUndone());
+
         String output = String.format("\tI have marked this task as undone.\n\t%s", taskman.get(idx));
         return new Pair<String, Taskman>(output, taskman);
     }
@@ -127,8 +133,10 @@ public class Parser {
      */
     private static Pair<String, Taskman> handleRemove(String input, Taskman taskman) throws BezdelnikException {
         int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+
         Task toDelete = taskman.get(idx);
         taskman = taskman.remove(idx);
+
         String output = String.format("\tI have deleted this task.\n\t%s", toDelete);
         return new Pair<String, Taskman>(output, taskman);
     }
@@ -147,6 +155,7 @@ public class Parser {
         } else {
             Task toAdd = new Todo(todoInput);
             taskman = taskman.add(toAdd);
+
             String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
             return new Pair<String, Taskman>(output, taskman);
         }
@@ -162,8 +171,10 @@ public class Parser {
     private static Pair<String, Taskman> handleDeadline(String input, Taskman taskman) {
         String deadlineInput = removeFirstWord(input);
         String[] array = deadlineInput.split(" /by ");
+
         Task toAdd = new Deadline(array[0], array[1]);
         taskman = taskman.add(toAdd);
+
         String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
         return new Pair<String, Taskman>(output, taskman);
     }
@@ -178,9 +189,11 @@ public class Parser {
     private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) {
         String eventInput = removeFirstWord(input);
         String[] array = eventInput.split(" /");
+
         // Assumes array[1] starts with "from " and array[2] starts with "to "
         Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
         taskman = taskman.add(toAdd);
+
         String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
         return new Pair<String, Taskman>(output, taskman);
     }
@@ -206,6 +219,7 @@ public class Parser {
      */
     private static Pair<String, Taskman> handleSort(Taskman taskman) {
         taskman = taskman.sorted();
+
         String output = "\tTasks sorted by time\n" + taskman.listString();;
         return new Pair<String, Taskman>(output, taskman);
     }
@@ -214,6 +228,7 @@ public class Parser {
         String path = "./data/" + removeFirstWord(input);
         try {
             Storage.writeTaskmanToFile(taskman, path);
+
             String output = String.format("\tTask list archived to: %s. You have turned over a new leaf.", path);
             return new Pair<String, Taskman>(output, new Taskman());
         } catch (Throwable t) {
