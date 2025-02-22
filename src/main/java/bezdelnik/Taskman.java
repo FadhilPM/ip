@@ -26,6 +26,8 @@ public class Taskman {
      * @param taskStream A stream of tasks.
      */
     private Taskman(Stream<Task> taskStream) {
+        assert taskStream != null;
+
         this.taskList = taskStream.toList();
     }
 
@@ -35,8 +37,10 @@ public class Taskman {
      * @param t The task to add.
      * @return A new Taskman instance with the task added.
      */
-    public Taskman add(Task t) {
-        return new Taskman(Stream.concat(taskList.stream(), Stream.<Task>of(t)));
+    public Taskman add(Task task) {
+        assert task != null;
+
+        return new Taskman(Stream.concat(taskList.stream(), Stream.<Task>of(task)));
     }
 
     /**
@@ -46,7 +50,9 @@ public class Taskman {
      * @param t The new task.
      * @return A new Taskman instance with the updated task.
      */
-    public Taskman set(int i, Task t) {
+    public Taskman set(int i, Task task) {
+        assert task != null;
+
         return new Taskman(IntStream.range(0, taskList.size())
         .mapToObj(x -> {
             if (x == i) {
@@ -94,6 +100,7 @@ public class Taskman {
      */
     public Taskman operate(int i, Function<? super Task, ? extends Task> fn) throws BezdelnikException {
         assert fn != null;
+
         return this.set(i, fn.apply(get(i)));
     }
 
@@ -108,6 +115,7 @@ public class Taskman {
     public Taskman operateOptional(int i, Function<? super Task, ? extends Optional<? extends Task>> fn)
             throws BezdelnikException {
         assert fn != null;
+
         return fn.apply(taskList.get(i))
         .map(x -> this.set(i, x))
         .orElse(this.remove(i));
@@ -121,6 +129,7 @@ public class Taskman {
      */
     public Taskman filter(Predicate<? super Task> pt) {
         assert pt != null;
+
         return new Taskman(taskList.stream().filter(pt));
     }
 
