@@ -55,7 +55,7 @@ shadowJar {
     archiveBaseName = "bezdelnik"
     archiveClassifier = null
     manifest {
-        attributes 'Main-Class': 'bezdelnik.Bezdelnik'
+        attributes 'Main-Class': 'bezdelnik.Launcher'
     }
 }
 
