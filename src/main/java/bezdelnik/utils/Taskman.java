@@ -1,4 +1,5 @@
-package bezdelnik;
+package bezdelnik.utils;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import bezdelnik.tasks.Task;
 
 /**
  * Immutable Task list manager
@@ -17,7 +19,7 @@ public class Taskman {
     /**
      * Constructs an empty Taskman.
      */
-    Taskman() {
+    public Taskman() {
         this.taskList = List.<Task>of();
     }
 

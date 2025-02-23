@@ -1,14 +1,14 @@
-package bezdelnik;
+package bezdelnik.utils;
 
 public class Bezdelnik {
     private final Taskman taskman;
     private final String saveLocation;
 
-    Bezdelnik() {
+    public Bezdelnik() {
         this(new Taskman(), "./data/output.dat");
     }
 
-    Bezdelnik(Taskman taskman, String saveLocation) {
+    public Bezdelnik(Taskman taskman, String saveLocation) {
         this.taskman = taskman;
         this.saveLocation = saveLocation;
     }

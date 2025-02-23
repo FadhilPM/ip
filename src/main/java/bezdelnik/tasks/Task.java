@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.tasks;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +16,7 @@ public abstract class Task implements Comparable<Task> {
      * @param description The task description.
      * @param isDone      The completion status.
      */
-    Task(String description, boolean isDone) {
+    public Task(String description, boolean isDone) {
         this.description = description;
         this.isDone = isDone;
     }

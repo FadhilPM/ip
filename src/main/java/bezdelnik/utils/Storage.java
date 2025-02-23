@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.utils;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,5 +1,7 @@
 package bezdelnik;
 
+import bezdelnik.utils.Bezdelnik;
+import bezdelnik.utils.Pair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
