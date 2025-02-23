@@ -31,9 +31,9 @@ public class TaskmanTest {
     @Test
     void filter_ReturnMatchingTasks() {
         Taskman taskman = new Taskman()
-        .add(new Todo("Buy groceries"))
-        .add(new Todo("Do laundry"))
-        .add(new Todo("Buy milk"));
+            .add(new Todo("Buy groceries"))
+            .add(new Todo("Do laundry"))
+            .add(new Todo("Buy milk"));
 
         // Test filtering tasks containing "Buy"
         Taskman filtered = taskman.filter(task -> task.contains("Buy"));
@@ -51,12 +51,12 @@ public class TaskmanTest {
     @Test
     void concat_ShouldCombineTaskmansCorrectly() throws BezdelnikException {
         Taskman taskman1 = new Taskman()
-        .add(new Todo("Task 1"))
-        .add(new Todo("Task 2"));
+            .add(new Todo("Task 1"))
+            .add(new Todo("Task 2"));
 
         Taskman taskman2 = new Taskman()
-        .add(new Todo("Task 3"))
-        .add(new Todo("Task 4"));
+            .add(new Todo("Task 3"))
+            .add(new Todo("Task 4"));
 
         // Test concatenation
         Taskman combined = taskman1.concat(taskman2);
