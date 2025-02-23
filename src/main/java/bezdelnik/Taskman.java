@@ -1,4 +1,5 @@
 package bezdelnik;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -140,6 +141,15 @@ public class Taskman {
      */
     public Taskman sorted() {
         return new Taskman(taskList.stream().sorted());
+    }
+
+    /**
+     * Returns a new Taskman with a sorted task list
+     * @param comparator - a non-interfering, stateless Comparator to be used to compare tasks
+     * @return A new Taskman instance with a {@code List<Task>}
+     */
+    public Taskman sorted(Comparator<? super Task> comparator) {
+        return new Taskman(taskList.stream().sorted(comparator));
     }
 
     /**
