@@ -29,6 +29,12 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userInput.setOnAction(event -> sendButton.fire());
+
+        // Listener for text field changes
+        userInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            sendButton.setDisable(newValue.trim().isEmpty());
+        });
     }
 
     public void setBezdelnik(Bezdelnik b) {
