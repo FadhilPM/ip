@@ -38,8 +38,9 @@ public class MainWindow extends AnchorPane {
     }
 
     public void setBezdelnik(Bezdelnik b) {
-        String response = b.initialise();
-        bezdelnik = b;
+        Pair<String, Bezdelnik> initialisedBezdelnik = b.initialise();
+        String response = initialisedBezdelnik.first();
+        this.bezdelnik = initialisedBezdelnik.second();
         dialogContainer.getChildren().addAll(DialogBox.getDukeDialog(response, dukeImage));
     }
 
@@ -50,10 +51,14 @@ public class MainWindow extends AnchorPane {
         if (input.matches("(bye|(/)?ex(it)?)")) {
             Platform.exit();
         } else {
-            String response = bezdelnik.getResponse(input);
+            Pair<String, Bezdelnik> response = bezdelnik.getResponse(input);
+
+            String toPrint = response.first();
+            this.bezdelnik = response.second();
+
             dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
+                DialogBox.getDukeDialog(toPrint, dukeImage)
             );
         }
     }

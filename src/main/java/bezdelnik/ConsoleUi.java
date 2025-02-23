@@ -1,7 +1,9 @@
 package bezdelnik;
 
+import java.util.Scanner;
+
 /**
- * Handles UI operations
+ * Handles UI operations in CLI
  */
 public class ConsoleUi {
     private static final String divider = "_".repeat(100);
@@ -14,18 +16,47 @@ public class ConsoleUi {
         + "|_____| |_____| |_____| |_|     |_| |_____|  /_/ |_| |_____| |_| |_| |_ /  |_| |_| \\_\\ ";
     private static final String greeting = String.format("%s\nHello from\n%s\n\nWhat can I do for you?\n%s",
                                                          "_".repeat(104), logo, "_".repeat(104));
+    private static Bezdelnik bezdelnik = new Bezdelnik();
+
+    public static void main(String[] args) {
+        Pair<String, Bezdelnik> initialisedBezdelnik = bezdelnik.initialise();
+        String response = initialisedBezdelnik.first();
+        bezdelnik = initialisedBezdelnik.second();
+        inputLoop(response);
+    }
+
+    /**
+     * Processes the user input loop.
+     *
+     * @param sessionStatus Initial session status message.
+     */
+    private static void inputLoop(String sessionStatus) {
+        ConsoleUi.greet(sessionStatus);
+        Scanner sc = new Scanner(System.in);
+        sc.useDelimiter("\n")
+        .tokens()
+        .map(input -> input.strip())
+        .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
+        .forEach(input -> {
+            Pair<String, Bezdelnik> response = bezdelnik.getResponse(input);
+            ConsoleUi.print(response.first());
+            bezdelnik = response.second();
+        });
+        sc.close();
+        ConsoleUi.bye();
+    }
 
     /**
      * Displays a greeting message along with the session status indicating if a data file was read
      *
      * @param sessionStatus The initial session status message.
      */
-    public static void greet(String sessionStatus) {
+    private static void greet(String sessionStatus) {
         System.out.println(greeting);
         System.out.println(sessionStatus);
     }
 
-    public static void bye() {
+    private static void bye() {
         print("\tBye. Hope to see you again soon!");
     }
 
@@ -34,7 +65,7 @@ public class ConsoleUi {
      *
      * @param output The message to be printed.
      */
-    public static void print(String output) {
+    private static void print(String output) {
         System.out.println(responseFormat(output));
     }
 
