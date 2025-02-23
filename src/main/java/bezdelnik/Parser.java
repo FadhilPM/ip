@@ -170,15 +170,19 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the updated task manager.
      */
-    private static Pair<String, Taskman> handleDeadline(String input, Taskman taskman) {
-        String deadlineInput = removeFirstWord(input);
-        String[] array = deadlineInput.split(" /by ");
+    private static Pair<String, Taskman> handleDeadline(String input, Taskman taskman) throws BezdelnikException {
+        try {
+            String deadlineInput = removeFirstWord(input);
+            String[] array = deadlineInput.split(" /by ");
 
-        Task toAdd = new Deadline(array[0], array[1]);
-        taskman = taskman.add(toAdd);
+            Task toAdd = new Deadline(array[0], array[1]);
+            taskman = taskman.add(toAdd);
 
-        String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
-        return new Pair<String, Taskman>(output, taskman);
+            String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
+            return new Pair<String, Taskman>(output, taskman);
+        } catch (Throwable t) {
+            throw new BezdelnikException(t.toString());
+        }
     }
 
     /**
@@ -188,16 +192,20 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the updated task manager.
      */
-    private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) {
-        String eventInput = removeFirstWord(input);
-        String[] array = eventInput.split(" /");
+    private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) throws BezdelnikException {
+        try {
+            String eventInput = removeFirstWord(input);
+            String[] array = eventInput.split(" /");
 
-        // Assumes array[1] starts with "from " and array[2] starts with "to "
-        Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
-        taskman = taskman.add(toAdd);
+            // Assumes array[1] starts with "from " and array[2] starts with "to "
+            Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
+            taskman = taskman.add(toAdd);
 
-        String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
-        return new Pair<String, Taskman>(output, taskman);
+            String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
+            return new Pair<String, Taskman>(output, taskman);
+        } catch (Throwable t) {
+            throw new BezdelnikException(t.toString());
+        }
     }
 
     /**
