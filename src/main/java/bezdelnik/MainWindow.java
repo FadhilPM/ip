@@ -40,7 +40,7 @@ public class MainWindow extends AnchorPane {
     public void setBezdelnik(Bezdelnik b) {
         Pair<String, Bezdelnik> initialisedBezdelnik = b.initialise();
         String response = initialisedBezdelnik.first();
-        bezdelnik = initialisedBezdelnik.second();
+        this.bezdelnik = initialisedBezdelnik.second();
         dialogContainer.getChildren().addAll(DialogBox.getDukeDialog(response, dukeImage));
     }
 
@@ -54,7 +54,7 @@ public class MainWindow extends AnchorPane {
             Pair<String, Bezdelnik> response = bezdelnik.getResponse(input);
 
             String toPrint = response.first();
-            bezdelnik = response.second();
+            this.bezdelnik = response.second();
 
             dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),

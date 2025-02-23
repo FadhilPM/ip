@@ -3,7 +3,7 @@ package bezdelnik;
 import java.util.Scanner;
 
 /**
- * Handles UI operations
+ * Handles UI operations in CLI
  */
 public class ConsoleUi {
     private static final String divider = "_".repeat(100);
@@ -30,7 +30,7 @@ public class ConsoleUi {
      *
      * @param sessionStatus Initial session status message.
      */
-    public static void inputLoop(String sessionStatus) {
+    private static void inputLoop(String sessionStatus) {
         ConsoleUi.greet(sessionStatus);
         Scanner sc = new Scanner(System.in);
         sc.useDelimiter("\n")
@@ -51,12 +51,12 @@ public class ConsoleUi {
      *
      * @param sessionStatus The initial session status message.
      */
-    public static void greet(String sessionStatus) {
+    private static void greet(String sessionStatus) {
         System.out.println(greeting);
         System.out.println(sessionStatus);
     }
 
-    public static void bye() {
+    private static void bye() {
         print("\tBye. Hope to see you again soon!");
     }
 
@@ -65,7 +65,7 @@ public class ConsoleUi {
      *
      * @param output The message to be printed.
      */
-    public static void print(String output) {
+    private static void print(String output) {
         System.out.println(responseFormat(output));
     }
 

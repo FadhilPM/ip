@@ -44,7 +44,8 @@ public class Storage {
         Taskman toReturn = Files.lines(Paths.get(inputPath))
             .reduce(new Taskman(), (x, y) -> Parser.parse(y, x).second(), (a, b) -> a.concat(b));
 
-        String status = String.format("Success: Tasks successfully loaded from %s", inputPath);
+        String status = String.format("Success: %d tasks successfully loaded from %s\n%s",
+                                      toReturn.size(), inputPath, toReturn.listString());
         return new Pair<String, Taskman>(status, toReturn);
     }
 }
