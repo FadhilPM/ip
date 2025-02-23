@@ -45,15 +45,15 @@ public class Bezdelnik {
      * @param sessionStatus Initial session status message.
      */
     private void inputLoop(String sessionStatus) {
-        Ui.greet(sessionStatus);
+        ConsoleUi.greet(sessionStatus);
         Scanner sc = new Scanner(System.in);
         sc.useDelimiter("\n")
             .tokens()
             .map(input -> input.strip())
             .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-            .forEach(input -> Ui.print(getResponse(input)));
+            .forEach(input -> ConsoleUi.print(getResponse(input)));
         sc.close();
-        Ui.bye();
+        ConsoleUi.bye();
     }
 
     public String getResponse(String input) {
@@ -62,7 +62,7 @@ public class Bezdelnik {
         try {
             Storage.writeTaskmanToFile(taskman, saveLocation);
         } catch (Throwable e) {
-            Ui.print(String.format("Unknown exception when saving data.", e.toString()));
+            ConsoleUi.print(String.format("Unknown exception when saving data.", e.toString()));
         }
         return parserOutput.first();
     }
