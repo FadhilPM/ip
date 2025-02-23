@@ -1,5 +1,6 @@
 package bezdelnik;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -39,11 +40,15 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
-        String response = bezdelnik.getResponse(input);
-        dialogContainer.getChildren().addAll(
-            DialogBox.getUserDialog(input, userImage),
-            DialogBox.getDukeDialog(response, dukeImage)
-        );
         userInput.clear();
+        if (input.matches("(bye|(/)?ex(it)?)")) {
+            Platform.exit();
+        } else {
+            String response = bezdelnik.getResponse(input);
+            dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getDukeDialog(response, dukeImage)
+            );
+        }
     }
 }
