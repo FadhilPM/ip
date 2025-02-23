@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.ui;
 
 import bezdelnik.utils.Bezdelnik;
 import bezdelnik.utils.Pair;

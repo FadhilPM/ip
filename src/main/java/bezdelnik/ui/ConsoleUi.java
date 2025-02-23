@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.ui;
 
 import java.util.Scanner;
 
