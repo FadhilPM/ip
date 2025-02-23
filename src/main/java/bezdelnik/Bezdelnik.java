@@ -1,69 +1,41 @@
 package bezdelnik;
 
-import java.util.Scanner;
-
-/**
- * Main entry point for chatbot
- * Initializes task manager, loads prior data if present,
- * handles the user input loop.
- */
 public class Bezdelnik {
-    private static Taskman taskman = new Taskman();
-    private static final String saveLocation = "./data/output.dat";
+    private final Taskman taskman;
+    private final String saveLocation;
 
-    /**
-     * Main entry point to the application.
-     *
-     * @param args Command-line arguments.
-     */
-    public static void main(String[] args) {
-        Bezdelnik bezdelnik = new Bezdelnik();
-        bezdelnik.run();
+    Bezdelnik() {
+        this(new Taskman(), "./data/output.dat");
     }
 
-    public void run() {
-        inputLoop(initialise());
+    Bezdelnik(Taskman taskman, String saveLocation) {
+        this.taskman = taskman;
+        this.saveLocation = saveLocation;
     }
 
     /**
      * Attempts to load data from save location.
      */
-    public String initialise() {
+    public Pair<String, Bezdelnik> initialise() {
         Pair<String, Taskman> readAttempt;
         try {
             readAttempt = Storage.readTaskmanFromFile(saveLocation);
         } catch (Throwable e) {
             readAttempt = new Pair<String, Taskman>("No prior data found, creating new session", new Taskman());
         }
-        taskman = readAttempt.second();
-        return readAttempt.first();
+        Taskman newTaskman = readAttempt.second();
+        return new Pair<String, Bezdelnik>(readAttempt.first(), new Bezdelnik(newTaskman, saveLocation));
     }
 
-    /**
-     * Processes the user input loop.
-     *
-     * @param sessionStatus Initial session status message.
-     */
-    private void inputLoop(String sessionStatus) {
-        ConsoleUi.greet(sessionStatus);
-        Scanner sc = new Scanner(System.in);
-        sc.useDelimiter("\n")
-            .tokens()
-            .map(input -> input.strip())
-            .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-            .forEach(input -> ConsoleUi.print(getResponse(input)));
-        sc.close();
-        ConsoleUi.bye();
-    }
-
-    public String getResponse(String input) {
+    public Pair<String, Bezdelnik> getResponse(String input) {
         Pair<String, Taskman> parserOutput = Parser.parse(input, taskman);
-        taskman = parserOutput.second();
+        String response = parserOutput.first();
+        Taskman newTaskman = parserOutput.second();
         try {
             Storage.writeTaskmanToFile(taskman, saveLocation);
         } catch (Throwable e) {
-            ConsoleUi.print(String.format("Unknown exception when saving data.", e.toString()));
+            System.out.println(String.format("Unknown exception when saving data.", e.toString()));
         }
-        return parserOutput.first();
+        return new Pair<String, Bezdelnik>(response, new Bezdelnik(newTaskman, saveLocation));
     }
 }
