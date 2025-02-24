@@ -73,14 +73,10 @@ public class Taskman {
      * @return A new Taskman instance with the task removed.
      * @throws BezdelnikException If the index is out of bounds.
      */
-    public Taskman remove(int i) throws BezdelnikException {
-        try {
-            return new Taskman(IntStream.range(0, taskList.size())
+    public Taskman remove(int i) {
+        return new Taskman(IntStream.range(0, taskList.size())
             .filter(x -> x != i)
             .mapToObj(x -> taskList.get(x)));
-        } catch (Throwable t) {
-            throw new BezdelnikException(t.toString());
-        }
     }
 
     /**
@@ -101,7 +97,7 @@ public class Taskman {
      * @return A new Taskman instance with the modified task.
      * @throws BezdelnikException If the index is out of bounds.
      */
-    public Taskman operate(int i, Function<? super Task, ? extends Task> fn) throws BezdelnikException {
+    public Taskman operate(int i, Function<? super Task, ? extends Task> fn) {
         assert fn != null;
 
         return this.set(i, fn.apply(get(i)));
@@ -161,13 +157,8 @@ public class Taskman {
      * @return The task at the specified index.
      * @throws BezdelnikException If the index is out of bounds.
      */
-    public Task get(int i) throws BezdelnikException {
-        assert i > -1;
-        try {
-            return taskList.get(i);
-        } catch (Throwable t) {
-            throw new BezdelnikException(t.toString());
-        }
+    public Task get(int i) {
+        return taskList.get(i);
     }
 
     /**

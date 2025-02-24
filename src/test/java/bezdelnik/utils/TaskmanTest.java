@@ -26,7 +26,7 @@ public class TaskmanTest {
 
         // Test operation on invalid index
         assertThrows(BezdelnikException.class, () ->
-        taskman.operate(1, Task::markAsDone)
+            taskman.operate(1, Task::markAsDone)
         );
     }
 
@@ -63,8 +63,8 @@ public class TaskmanTest {
         // Test concatenation
         Taskman combined = taskman1.concat(taskman2);
         assertEquals(4, combined.size());
-        assertEquals(String.format("[T] %s", "Task 1"), combined.get(0).toString());
-        assertEquals(String.format("[T] %s", "Task 4"), combined.get(3).toString());
+        assertEquals(String.format("[T] [] %s", "Task 1"), combined.get(0).toString());
+        assertEquals(String.format("[T] [] %s", "Task 4"), combined.get(3).toString());
 
         // Test concatenation with empty Taskman
         Taskman emptyTaskman = new Taskman();

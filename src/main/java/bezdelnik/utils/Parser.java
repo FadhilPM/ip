@@ -75,12 +75,8 @@ public class Parser {
             case ARCHIVE -> handleArchive(input, taskman);
             case UNKNOWN -> handleDefault(input, taskman);
             };
-        } catch (NumberFormatException n) {
-            return new Pair<String, Taskman>("\tInvalid integer!", taskman);
-        } catch (IndexOutOfBoundsException i) {
-            return new Pair<String, Taskman>("\tInvalid command parameters!", taskman);
         } catch (BezdelnikException be) {
-            return new Pair<String, Taskman>(be.toString(), taskman);
+            return new Pair<String, Taskman>(be.getMessage(), taskman);
         }
     }
 
@@ -104,12 +100,22 @@ public class Parser {
      * @throws BezdelnikException If an error occurs accessing the task.
      */
     private static Pair<String, Taskman> handleMark(String input, Taskman taskman) throws BezdelnikException {
-        int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+        try {
+            String[] parts = input.split(" ");
+            if (parts.length != 2) {
+                throw createOutOfRangeException(taskman);
+            }
+            
+            int idx = Integer.parseUnsignedInt(parts[1]) - 1;
 
-        taskman = taskman.operate(idx, x -> x.markAsDone());
-
-        String output = String.format("\tI have marked this task as done.\n\t%s", taskman.get(idx));
-        return new Pair<String, Taskman>(output, taskman);
+            taskman = taskman.operate(idx, x -> x.markAsDone());
+            String output = String.format("\tI have marked this task as done.\n\t%s", taskman.get(idx));
+            return new Pair<String, Taskman>(output, taskman);
+        } catch (NumberFormatException e) {
+            throw createOutOfRangeException(taskman);
+        } catch (IndexOutOfBoundsException iobe) {
+            throw createOutOfRangeException(taskman);
+        }
     }
 
     /**
@@ -121,12 +127,22 @@ public class Parser {
      * @throws BezdelnikException If an error occurs accessing the task.
      */
     private static Pair<String, Taskman> handleUnmark(String input, Taskman taskman) throws BezdelnikException {
-        int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+        try {
+            String[] parts = input.split(" ");
+            if (parts.length != 2) {
+                throw createOutOfRangeException(taskman);
+            }
 
-        taskman = taskman.operate(idx, x -> x.markAsUndone());
+            int idx = Integer.parseUnsignedInt(parts[1]) - 1;
 
-        String output = String.format("\tI have marked this task as undone.\n\t%s", taskman.get(idx));
-        return new Pair<String, Taskman>(output, taskman);
+            taskman = taskman.operate(idx, x -> x.markAsUndone());
+            String output = String.format("\tI have marked this task as undone.\n\t%s", taskman.get(idx));
+            return new Pair<String, Taskman>(output, taskman);
+        } catch (NumberFormatException e) {
+            throw createOutOfRangeException(taskman);
+        } catch (IndexOutOfBoundsException iobe) {
+            throw createOutOfRangeException(taskman);
+        }
     }
 
     /**
@@ -138,13 +154,24 @@ public class Parser {
      * @throws BezdelnikException If an error occurs accessing the task.
      */
     private static Pair<String, Taskman> handleRemove(String input, Taskman taskman) throws BezdelnikException {
-        int idx = Integer.parseUnsignedInt(input.split(" ")[1]) - 1;
+        try {
+            String[] parts = input.split(" ");
+            if (parts.length != 2) {
+                throw createOutOfRangeException(taskman);
+            }
+            
+            int idx = Integer.parseUnsignedInt(parts[1]) - 1;
 
-        Task toDelete = taskman.get(idx);
-        taskman = taskman.remove(idx);
+            Task toDelete = taskman.get(idx);
+            taskman = taskman.remove(idx);
 
-        String output = String.format("\tI have deleted this task.\n\t%s", toDelete);
-        return new Pair<String, Taskman>(output, taskman);
+            String output = String.format("\tI have deleted this task.\n\t%s", toDelete);
+            return new Pair<String, Taskman>(output, taskman);
+        } catch (NumberFormatException e) {
+            throw createOutOfRangeException(taskman);
+        } catch (IndexOutOfBoundsException iobe) {
+            throw createOutOfRangeException(taskman);
+        }
     }
 
     /**
@@ -154,16 +181,20 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the updated task manager.
      */
-    private static Pair<String, Taskman> handleTodo(String input, Taskman taskman) {
+    private static Pair<String, Taskman> handleTodo(String input, Taskman taskman) throws BezdelnikException {
         String todoInput = removeFirstWord(input);
         if (todoInput.isEmpty()) {
-            return new Pair<String, Taskman>("\ttodo must be followed with something to do!", taskman);
-        } else {
+            throw createTodoFormatException();
+        }
+        
+        try {
             Task toAdd = new Todo(todoInput);
             taskman = taskman.add(toAdd);
 
             String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
             return new Pair<String, Taskman>(output, taskman);
+        } catch (Throwable t) {
+            throw new BezdelnikException("Error creating todo task: " + t.getMessage());
         }
     }
 
@@ -177,15 +208,25 @@ public class Parser {
     private static Pair<String, Taskman> handleDeadline(String input, Taskman taskman) throws BezdelnikException {
         try {
             String deadlineInput = removeFirstWord(input);
+            if (deadlineInput.isEmpty()) {
+                throw createDeadlineFormatException();
+            }
+
             String[] array = deadlineInput.split(" /by ");
+            if (array.length != 2 || array[0].trim().isEmpty()) {
+                throw createDeadlineFormatException();
+            }
 
-            Task toAdd = new Deadline(array[0], array[1]);
-            taskman = taskman.add(toAdd);
-
-            String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
-            return new Pair<String, Taskman>(output, taskman);
+            try {
+                Task toAdd = new Deadline(array[0], array[1]);
+                taskman = taskman.add(toAdd);
+                String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
+                return new Pair<String, Taskman>(output, taskman);
+            } catch (java.time.format.DateTimeParseException e) {
+                throw createDeadlineFormatException();
+            }
         } catch (Throwable t) {
-            throw new BezdelnikException(t.toString());
+            throw new BezdelnikException("Error creating deadline task: " + t.getMessage());
         }
     }
 
@@ -199,16 +240,25 @@ public class Parser {
     private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) throws BezdelnikException {
         try {
             String eventInput = removeFirstWord(input);
+            if (eventInput.isEmpty()) {
+                throw createEventFormatException();
+            }
+
             String[] array = eventInput.split(" /");
+            if (array.length != 3 || array[0].trim().isEmpty() || !array[1].startsWith("from ") || !array[2].startsWith("to ")) {
+                throw createEventFormatException();
+            }
 
-            // Assumes array[1] starts with "from " and array[2] starts with "to "
-            Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
-            taskman = taskman.add(toAdd);
-
-            String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
-            return new Pair<String, Taskman>(output, taskman);
+            try {
+                Task toAdd = new Event(array[0], array[1].substring(5), array[2].substring(3));
+                taskman = taskman.add(toAdd);
+                String output = String.format("\tadded:\n\t%s\n\tYou currently have %d task(s)", toAdd, taskman.size());
+                return new Pair<String, Taskman>(output, taskman);
+            } catch (java.time.format.DateTimeParseException e) {
+                throw createEventFormatException();
+            }
         } catch (Throwable t) {
-            throw new BezdelnikException(t.toString());
+            throw new BezdelnikException("Error creating event task: " + t.getMessage());
         }
     }
 
@@ -219,9 +269,17 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with the filtered task list as a formatted string and the unchanged task manager.
      */
-    private static Pair<String, Taskman> handleFind(String input, Taskman taskman) {
+    private static Pair<String, Taskman> handleFind(String input, Taskman taskman) throws BezdelnikException {
         String toSearchFor = removeFirstWord(input);
-        String output = taskman.filter(x -> x.contains(toSearchFor)).listString();
+        if (toSearchFor.isEmpty()) {
+            throw new BezdelnikException("Please specify a search term");
+        }
+
+        Taskman filtered = taskman.filter(x -> x.contains(toSearchFor));
+        String matchCount = filtered.size() == 0 ? "No matches found" : 
+                           String.format("Found %d matching task(s)", filtered.size());
+        
+        String output = String.format("\t%s:\n%s", matchCount, filtered.listString());
         return new Pair<String, Taskman>(output, taskman);
     }
 
@@ -231,10 +289,13 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the task list as a formatted string and the sorted task manager.
      */
-    private static Pair<String, Taskman> handleSort(Taskman taskman) {
+    private static Pair<String, Taskman> handleSort(Taskman taskman) throws BezdelnikException {
+        if (taskman.size() == 0) {
+            throw new BezdelnikException("No tasks to sort!");
+        }
+        
         taskman = taskman.sorted();
-
-        String output = "\tTasks sorted by time\n" + taskman.listString();;
+        String output = String.format("\t%d task(s) sorted by time:\n%s", taskman.size(), taskman.listString());
         return new Pair<String, Taskman>(output, taskman);
     }
 
@@ -260,5 +321,28 @@ public class Parser {
     private static Pair<String, Taskman> handleDefault(String input, Taskman taskman) {
         String output = String.format("\tUnsupported command: %s", input);
         return new Pair<String, Taskman>(output, taskman);
+    }
+
+    private static BezdelnikException createOutOfRangeException(Taskman taskman) {
+        String errorMessage;
+        if (taskman.size() == 0) {
+            errorMessage = "No tasks to operate on!";
+        } else {
+            errorMessage = String.format(
+                "Please provide a valid task number in the following range [1, %d]", taskman.size());
+        }
+        return new BezdelnikException(errorMessage);
+    }
+
+    private static BezdelnikException createEventFormatException() {
+        return new BezdelnikException("Please use the format: event <description> /from dd/MM/yyyy HHmm /to dd/MM/yyyy HHmm");
+    }
+
+    private static BezdelnikException createTodoFormatException() {
+        return new BezdelnikException("Please use the format: todo <description>");
+    }
+
+    private static BezdelnikException createDeadlineFormatException() {
+        return new BezdelnikException("Please use the format: deadline <description> /by dd/MM/yyyy HHmm");
     }
 }
