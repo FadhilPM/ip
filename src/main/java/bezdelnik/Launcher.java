@@ -1,5 +1,7 @@
 package bezdelnik;
 
+import bezdelnik.ui.ConsoleUi;
+import bezdelnik.ui.Main;
 import javafx.application.Application;
 
 /*

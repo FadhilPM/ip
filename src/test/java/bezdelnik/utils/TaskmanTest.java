@@ -1,5 +1,7 @@
-package bezdelnik;
+package bezdelnik.utils;
+//package bezdelnik.tasks;
 
+import bezdelnik.tasks.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,8 +63,8 @@ public class TaskmanTest {
         // Test concatenation
         Taskman combined = taskman1.concat(taskman2);
         assertEquals(4, combined.size());
-        assertEquals("Task 1", combined.get(0).description);
-        assertEquals("Task 4", combined.get(3).description);
+        assertEquals(String.format("[T] %s", "Task 1"), combined.get(0).toString());
+        assertEquals(String.format("[T] %s", "Task 4"), combined.get(3).toString());
 
         // Test concatenation with empty Taskman
         Taskman emptyTaskman = new Taskman();

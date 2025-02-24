@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.utils;
 
 /**
  * Pair record.

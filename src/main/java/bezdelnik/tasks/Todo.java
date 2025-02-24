@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.tasks;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +11,7 @@ public class Todo extends Task {
      *
      * @param description The task description.
      */
-    Todo(String description) {
+    public Todo(String description) {
         this(description, false);
     }
 
@@ -21,7 +21,7 @@ public class Todo extends Task {
      * @param description The task description.
      * @param isDone      The completion status.
      */
-    Todo(String description, boolean isDone) {
+    public Todo(String description, boolean isDone) {
         super(description, isDone);
     }
 

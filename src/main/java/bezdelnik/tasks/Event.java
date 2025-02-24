@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +19,7 @@ public class Event extends Task {
      * @param from        The start date/time in the format dd/MM/yyyy HHmm.
      * @param to          The end date/time in the format dd/MM/yyyy HHmm.
      */
-    Event(String description, String from, String to) {
+    public Event(String description, String from, String to) {
         this(description, false, from, to);
     }
 
@@ -30,7 +30,7 @@ public class Event extends Task {
      * @param from        The start date/time.
      * @param to          The end date/time.
      */
-    Event(String description, LocalDateTime from, LocalDateTime to) {
+    public Event(String description, LocalDateTime from, LocalDateTime to) {
         this(description, false, from, to);
     }
 
@@ -42,7 +42,7 @@ public class Event extends Task {
      * @param from        The start date/time in the format dd/MM/yyyy HHmm.
      * @param to          The end date/time in the format dd/MM/yyyy HHmm.
      */
-    Event(String description, boolean isDone, String from, String to) {
+    public Event(String description, boolean isDone, String from, String to) {
         super(description, isDone);
         this.from = LocalDateTime.parse(from, formatter);
         this.to = LocalDateTime.parse(to, formatter);
@@ -56,7 +56,7 @@ public class Event extends Task {
      * @param from        The start date/time.
      * @param to          The end date/time.
      */
-    Event(String description, boolean isDone, LocalDateTime from, LocalDateTime to) {
+    public Event(String description, boolean isDone, LocalDateTime from, LocalDateTime to) {
         super(description, isDone);
         this.from = from;
         this.to = to;

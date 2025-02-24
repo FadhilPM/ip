@@ -1,7 +1,11 @@
-package bezdelnik;
+package bezdelnik.utils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
+import bezdelnik.tasks.Task;
+import bezdelnik.tasks.Todo;
+import bezdelnik.tasks.Deadline;
+import bezdelnik.tasks.Event;
 
 /**
  * Provides public static method to parse user input commands and update the task manager.

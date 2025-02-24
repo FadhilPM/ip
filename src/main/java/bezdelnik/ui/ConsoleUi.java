@@ -1,6 +1,9 @@
-package bezdelnik;
+package bezdelnik.ui;
 
 import java.util.Scanner;
+
+import bezdelnik.utils.Bezdelnik;
+import bezdelnik.utils.Pair;
 
 /**
  * Handles UI operations in CLI
@@ -34,14 +37,14 @@ public class ConsoleUi {
         ConsoleUi.greet(sessionStatus);
         Scanner sc = new Scanner(System.in);
         sc.useDelimiter("\n")
-        .tokens()
-        .map(input -> input.strip())
-        .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
-        .forEach(input -> {
-            Pair<String, Bezdelnik> response = bezdelnik.getResponse(input);
-            ConsoleUi.print(response.first());
-            bezdelnik = response.second();
-        });
+            .tokens()
+            .map(input -> input.strip())
+            .takeWhile(input -> !input.matches("(bye|(/)?ex(it)?)"))
+            .forEach(input -> {
+                Pair<String, Bezdelnik> response = bezdelnik.getResponse(input);
+                ConsoleUi.print(response.first());
+                bezdelnik = response.second();
+            });
         sc.close();
         ConsoleUi.bye();
     }

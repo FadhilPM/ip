@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.utils;
 
 /**
  * Exception specific to the Bezdelnik application.

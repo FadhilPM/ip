@@ -1,4 +1,4 @@
-package bezdelnik;
+package bezdelnik.tasks;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +17,7 @@ public class Deadline extends Task {
      * @param description The task description.
      * @param byString    The due date/time in the format dd/MM/yyyy HHmm.
      */
-    Deadline(String description, String byString) {
+    public Deadline(String description, String byString) {
         this(description, false, byString);
     }
 
@@ -27,7 +27,7 @@ public class Deadline extends Task {
      * @param description The task description.
      * @param by          The due date/time.
      */
-    Deadline(String description, LocalDateTime by) {
+    public Deadline(String description, LocalDateTime by) {
         this(description, false, by);
     }
 
@@ -38,7 +38,7 @@ public class Deadline extends Task {
      * @param isDone      The completion status.
      * @param byString    The due date/time in the format dd/MM/yyyy HHmm.
      */
-    Deadline(String description, boolean isDone, String byString) {
+    public Deadline(String description, boolean isDone, String byString) {
         super(description, isDone);
         this.by = LocalDateTime.parse(byString, formatter);
     }
@@ -50,7 +50,7 @@ public class Deadline extends Task {
      * @param isDone      The completion status.
      * @param by          The due date/time.
      */
-    Deadline(String description, boolean isDone, LocalDateTime by) {
+    public Deadline(String description, boolean isDone, LocalDateTime by) {
         super(description, isDone);
         this.by = by;
     }
