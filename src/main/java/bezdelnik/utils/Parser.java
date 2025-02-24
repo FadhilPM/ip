@@ -111,7 +111,7 @@ public class Parser {
             taskman = taskman.operate(idx, x -> x.markAsDone());
             String output = String.format("\tI have marked this task as done.\n\t%s", taskman.get(idx));
             return new Pair<String, Taskman>(output, taskman);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException nfe) {
             throw createOutOfRangeException(taskman);
         } catch (IndexOutOfBoundsException iobe) {
             throw createOutOfRangeException(taskman);
@@ -138,7 +138,7 @@ public class Parser {
             taskman = taskman.operate(idx, x -> x.markAsUndone());
             String output = String.format("\tI have marked this task as undone.\n\t%s", taskman.get(idx));
             return new Pair<String, Taskman>(output, taskman);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException nfe) {
             throw createOutOfRangeException(taskman);
         } catch (IndexOutOfBoundsException iobe) {
             throw createOutOfRangeException(taskman);
@@ -167,7 +167,7 @@ public class Parser {
 
             String output = String.format("\tI have deleted this task.\n\t%s", toDelete);
             return new Pair<String, Taskman>(output, taskman);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException nfe) {
             throw createOutOfRangeException(taskman);
         } catch (IndexOutOfBoundsException iobe) {
             throw createOutOfRangeException(taskman);
@@ -302,7 +302,7 @@ public class Parser {
     private static Pair<String, Taskman> handleArchive(String input, Taskman taskman) throws BezdelnikException {
         String path = "./data/" + removeFirstWord(input);
         try {
-            Storage.writeTaskmanToFile(taskman, path);
+            WriteStorage.writeTaskmanToFile(taskman, path);
 
             String output = String.format("\tTask list archived to: %s. You have turned over a new leaf.", path);
             return new Pair<String, Taskman>(output, new Taskman());
@@ -334,15 +334,15 @@ public class Parser {
         return new BezdelnikException(errorMessage);
     }
 
-    private static BezdelnikException createEventFormatException() {
-        return new BezdelnikException("Please use the format: event <description> /from dd/MM/yyyy HHmm /to dd/MM/yyyy HHmm");
-    }
-
     private static BezdelnikException createTodoFormatException() {
         return new BezdelnikException("Please use the format: todo <description>");
     }
 
     private static BezdelnikException createDeadlineFormatException() {
         return new BezdelnikException("Please use the format: deadline <description> /by dd/MM/yyyy HHmm");
+    }
+
+    private static BezdelnikException createEventFormatException() {
+        return new BezdelnikException("Please use the format: event <description> /from dd/MM/yyyy HHmm /to dd/MM/yyyy HHmm");
     }
 }

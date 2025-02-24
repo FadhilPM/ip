@@ -20,7 +20,7 @@ public class Bezdelnik {
         Pair<String, Taskman> readAttempt;
 
         try {
-            readAttempt = Storage.readTaskmanFromFile(saveLocation);
+            readAttempt = ReadStorage.readTaskmanFromFile(saveLocation);
         } catch (Throwable e) {
             readAttempt = new Pair<String, Taskman>("No prior data found, creating new session", new Taskman());
         }
@@ -36,7 +36,7 @@ public class Bezdelnik {
         Taskman newTaskman = parserOutput.second();
 
         try {
-            Storage.writeTaskmanToFile(taskman, saveLocation);
+            WriteStorage.writeTaskmanToFile(taskman, saveLocation);
         } catch (Throwable e) {
             System.out.println(String.format("Unknown exception when saving data.", e.toString()));
         }
