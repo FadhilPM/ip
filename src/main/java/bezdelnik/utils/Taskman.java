@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import bezdelnik.tasks.Task;
 
 /**
@@ -37,7 +38,7 @@ public class Taskman {
     /**
      * Returns a new Taskman with the specified task added.
      *
-     * @param t The task to add.
+     * @param task The task to add.
      * @return A new Taskman instance with the task added.
      */
     public Taskman add(Task task) {
@@ -50,7 +51,7 @@ public class Taskman {
      * Returns a new Taskman with the task at the specified index replaced.
      *
      * @param i The index of the task to replace.
-     * @param t The new task.
+     * @param task The new task.
      * @return A new Taskman instance with the updated task.
      */
     public Taskman set(int i, Task task) {
