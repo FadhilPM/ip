@@ -25,8 +25,6 @@ public class MarkCommand implements Command {
             Taskman newTaskman = taskman.operate(idx, x -> x.markAsDone());
             String output = String.format("\tI have marked this task as done.\n\t%s", newTaskman.get(idx));
             return new Pair<String, Taskman>(output, newTaskman);
-        } catch (NumberFormatException nfe) {
-            throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         } catch (IndexOutOfBoundsException iobe) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         }

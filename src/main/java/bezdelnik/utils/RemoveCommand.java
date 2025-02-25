@@ -29,8 +29,6 @@ public class RemoveCommand implements Command {
 
             String output = String.format("\tI have deleted this task.\n\t%s", toDelete);
             return new Pair<String, Taskman>(output, newTaskman);
-        } catch (NumberFormatException nfe) {
-            throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         } catch (IndexOutOfBoundsException iobe) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         }

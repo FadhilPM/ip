@@ -25,8 +25,6 @@ public class UnmarkCommand implements Command {
             Taskman newTaskman = taskman.operate(idx, x -> x.markAsUndone());
             String output = String.format("\tI have marked this task as undone.\n\t%s", newTaskman.get(idx));
             return new Pair<String, Taskman>(output, newTaskman);
-        } catch (NumberFormatException nfe) {
-            throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         } catch (IndexOutOfBoundsException iobe) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         }
