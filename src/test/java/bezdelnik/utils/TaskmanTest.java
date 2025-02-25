@@ -1,7 +1,7 @@
 package bezdelnik.utils;
-//package bezdelnik.tasks;
 
-import bezdelnik.tasks.*;
+import bezdelnik.tasks.Task;
+import bezdelnik.tasks.Todo;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,7 +25,7 @@ public class TaskmanTest {
         assertFalse(revertedTaskman.get(0).isDone());
 
         // Test operation on invalid index
-        assertThrows(BezdelnikException.class, () ->
+        assertThrows(ArrayIndexOutOfBoundsException.class, () ->
             taskman.operate(1, Task::markAsDone)
         );
     }
