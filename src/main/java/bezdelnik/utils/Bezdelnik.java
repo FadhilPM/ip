@@ -48,7 +48,7 @@ public class Bezdelnik {
         }
 
         try {
-            WriteStorage.writeTaskmanToFile(taskman, saveLocation);
+            WriteStorage.writeTaskmanToFile(newTaskman, saveLocation);
         } catch (Throwable e) {
             System.out.println(String.format("Unknown exception when saving data.", e.toString()));
         }
@@ -58,18 +58,17 @@ public class Bezdelnik {
 
     private Pair<String, Taskman> streamToTaskman(Stream<String> st, String saveLocation) {
         Taskman toReturn = st
-            .reduce(new Taskman(),
-                    (x, y) -> {
-                        try {
-                            return Parser.parse(y, x).execute().second();
-                        } catch (BezdelnikException be) {
-                            return new Taskman();
-                        }
-                    },
-                    (a, b) -> a.concat(b));
+            .reduce(new Taskman(), (x, y) -> {
+                try {
+                    return Parser.parse(y, x).execute().second();
+                } catch (BezdelnikException be) {
+                    return new Taskman();
+                }
+            }, (a, b) -> a.concat(b));
 
-            String status = String.format("Success: %d tasks successfully loaded from %s\n%s",
-                                          toReturn.size(), saveLocation, toReturn.listString());
+        String status = String.format("Success: %d tasks successfully loaded from %s\n%s",
+                                      toReturn.size(), saveLocation, toReturn.listString());
+
         return new Pair<String, Taskman>(status, toReturn);
     }
 }
