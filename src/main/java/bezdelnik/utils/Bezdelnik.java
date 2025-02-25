@@ -25,7 +25,7 @@ public class Bezdelnik {
             readAttempt = new Pair<String, Taskman>("No prior data found, creating new session", new Taskman());
         }
 
-       Taskman newTaskman = readAttempt.second();
+        Taskman newTaskman = readAttempt.second();
         return new Pair<String, Bezdelnik>(readAttempt.first(), new Bezdelnik(newTaskman, saveLocation));
     }
 
