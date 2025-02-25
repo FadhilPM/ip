@@ -52,28 +52,24 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair containing a response message and the updated task manager.
      */
-    public static Pair<String, Taskman> parse(String input, Taskman taskman) {
+    public static Command parse(String input, Taskman taskman) throws BezdelnikException {
         assert input != null;
         assert taskman != null;
 
         CommandType commandType = determineCommandType(input);
-        try {
-            return switch (commandType) {
-            case LIST -> handleList(taskman);
-            case MARK -> handleMark(input, taskman);
-            case UNMARK -> handleUnmark(input, taskman);
-            case REMOVE -> handleRemove(input, taskman);
-            case TODO -> handleTodo(input, taskman);
-            case DEADLINE -> handleDeadline(input, taskman);
-            case EVENT -> handleEvent(input, taskman);
-            case FIND -> handleFind(input, taskman);
-            case SORT -> handleSort(taskman);
-            case ARCHIVE -> handleArchive(input, taskman);
-            case UNKNOWN -> handleDefault(input, taskman);
-            };
-        } catch (BezdelnikException be) {
-            return new Pair<String, Taskman>(be.getMessage(), taskman);
-        }
+        return switch (commandType) {
+        case LIST -> handleList(taskman);
+        case MARK -> handleMark(input, taskman);
+        case UNMARK -> handleUnmark(input, taskman);
+        case REMOVE -> handleRemove(input, taskman);
+        case TODO -> handleTodo(input, taskman);
+        case DEADLINE -> handleDeadline(input, taskman);
+        case EVENT -> handleEvent(input, taskman);
+        case FIND -> handleFind(input, taskman);
+        case SORT -> handleSort(taskman);
+        case ARCHIVE -> handleArchive(input, taskman);
+        case UNKNOWN -> handleDefault(input, taskman);
+        };
     }
 
     /**
@@ -82,9 +78,9 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with the task list as a formatted string and the task manager.
      */
-    private static Pair<String, Taskman> handleList(Taskman taskman) throws BezdelnikException {
+    private static Command handleList(Taskman taskman) throws BezdelnikException {
         Command toReturn = new ListCommand(taskman);
-        return toReturn.execute();
+        return toReturn;
     }
 
     /**
@@ -95,7 +91,7 @@ public class Parser {
      * @return A Pair with a confirmation message and the updated task manager.
      * @throws BezdelnikException If an error occurs accessing the task.
      */
-    private static Pair<String, Taskman> handleMark(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleMark(String input, Taskman taskman) throws BezdelnikException {
         String[] parts = input.split(" ");
         if (parts.length != 2) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
@@ -104,7 +100,7 @@ public class Parser {
         try {
             int idx = Integer.parseUnsignedInt(parts[1]) - 1;
             Command toReturn = new MarkCommand(taskman, idx);
-            return toReturn.execute();
+            return toReturn;
         } catch (NumberFormatException nfe) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         }
@@ -118,7 +114,7 @@ public class Parser {
      * @return A Pair with a confirmation message and the updated task manager.
      * @throws BezdelnikException If an error occurs accessing the task.
      */
-    private static Pair<String, Taskman> handleUnmark(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleUnmark(String input, Taskman taskman) throws BezdelnikException {
         String[] parts = input.split(" ");
         if (parts.length != 2) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
@@ -127,7 +123,7 @@ public class Parser {
         try {
             int idx = Integer.parseUnsignedInt(parts[1]) - 1;
             Command toReturn = new UnmarkCommand(taskman, idx);
-            return toReturn.execute();
+            return toReturn;
         } catch (NumberFormatException nfe) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         }
@@ -141,7 +137,7 @@ public class Parser {
      * @return A Pair with a confirmation message and the updated task manager.
      * @throws BezdelnikException If an error occurs accessing the task.
      */
-    private static Pair<String, Taskman> handleRemove(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleRemove(String input, Taskman taskman) throws BezdelnikException {
         String[] parts = input.split(" ");
         if (parts.length != 2) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
@@ -149,7 +145,7 @@ public class Parser {
         try {
             int idx = Integer.parseUnsignedInt(parts[1]) - 1;
             Command toReturn = new RemoveCommand(taskman, idx);
-            return toReturn.execute();
+            return toReturn;
         } catch (NumberFormatException nfe) {
             throw BezdelnikExceptionCreator.createOutOfRangeException(taskman);
         }
@@ -162,14 +158,14 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the updated task manager.
      */
-    private static Pair<String, Taskman> handleTodo(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleTodo(String input, Taskman taskman) throws BezdelnikException {
         String todoInput = removeFirstWord(input);
         if (todoInput.isEmpty()) {
             throw BezdelnikExceptionCreator.createTodoFormatException();
         }
 
         Command toReturn = new TodoCommand(taskman, todoInput);
-        return toReturn.execute();
+        return toReturn;
     }
 
     /**
@@ -179,7 +175,7 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the updated task manager.
      */
-    private static Pair<String, Taskman> handleDeadline(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleDeadline(String input, Taskman taskman) throws BezdelnikException {
         String deadlineInput = removeFirstWord(input);
         if (deadlineInput.isEmpty()) {
             throw BezdelnikExceptionCreator.createDeadlineFormatException();
@@ -190,7 +186,7 @@ public class Parser {
             throw BezdelnikExceptionCreator.createDeadlineFormatException();
         }
         Command toReturn = new DeadlineCommand(taskman, array);
-        return toReturn.execute();
+        return toReturn;
     }
 
     /**
@@ -200,7 +196,7 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the updated task manager.
      */
-    private static Pair<String, Taskman> handleEvent(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleEvent(String input, Taskman taskman) throws BezdelnikException {
         String eventInput = removeFirstWord(input);
         if (eventInput.isEmpty()) {
             throw BezdelnikExceptionCreator.createEventFormatException();
@@ -213,7 +209,7 @@ public class Parser {
         }
 
         Command toReturn = new EventCommand(taskman, array);
-        return toReturn.execute();
+        return toReturn;
     }
 
     /**
@@ -223,13 +219,13 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with the filtered task list as a formatted string and the unchanged task manager.
      */
-    private static Pair<String, Taskman> handleFind(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleFind(String input, Taskman taskman) throws BezdelnikException {
         String toSearchFor = removeFirstWord(input);
         if (toSearchFor.isEmpty()) {
             throw new BezdelnikException("Please specify a search term");
         }
         Command toReturn = new FindCommand(taskman, toSearchFor);
-        return toReturn.execute();
+        return toReturn;
 
     }
 
@@ -239,16 +235,16 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with a confirmation message and the task list as a formatted string and the sorted task manager.
      */
-    private static Pair<String, Taskman> handleSort(Taskman taskman) throws BezdelnikException {
+    private static Command handleSort(Taskman taskman) throws BezdelnikException {
         Command toReturn = new SortCommand(taskman);
-        return toReturn.execute();
+        return toReturn;
 
     }
 
-    private static Pair<String, Taskman> handleArchive(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleArchive(String input, Taskman taskman) throws BezdelnikException {
         String path = "./data/" + removeFirstWord(input);
         Command toReturn = new ArchiveCommand(taskman, path);
-        return toReturn.execute();
+        return toReturn;
     }
 
     /**
@@ -258,8 +254,8 @@ public class Parser {
      * @param taskman The current task manager state.
      * @return A Pair with an error message and the unchanged task manager.
      */
-    private static Pair<String, Taskman> handleDefault(String input, Taskman taskman) throws BezdelnikException {
+    private static Command handleDefault(String input, Taskman taskman) throws BezdelnikException {
         Command toReturn = new DefaultCommand(taskman, input);
-        return toReturn.execute();
+        return toReturn;
     }
 }

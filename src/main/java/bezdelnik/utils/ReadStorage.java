@@ -19,7 +19,15 @@ public class ReadStorage {
         assert inputPath != null;
 
         Taskman toReturn = Files.lines(Paths.get(inputPath))
-            .reduce(new Taskman(), (x, y) -> Parser.parse(y, x).second(), (a, b) -> a.concat(b));
+            .reduce(new Taskman(),
+                    (x, y) -> {
+                        try {
+                            return Parser.parse(y, x).execute().second();
+                        } catch (BezdelnikException be) {
+                            return new Taskman();
+                        }
+                    },
+                    (a, b) -> a.concat(b));
 
         String status = String.format("Success: %d tasks successfully loaded from %s\n%s",
                                       toReturn.size(), inputPath, toReturn.listString());

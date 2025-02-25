@@ -30,10 +30,18 @@ public class Bezdelnik {
     }
 
     public Pair<String, Bezdelnik> getResponse(String input) {
-        Pair<String, Taskman> parserOutput = Parser.parse(input, taskman);
+        String response;
+        Taskman newTaskman;
+        try {
+            Command parserOutput = Parser.parse(input, taskman);
+            Pair<String, Taskman> executionOutput = parserOutput.execute();
 
-        String response = parserOutput.first();
-        Taskman newTaskman = parserOutput.second();
+            response = executionOutput.first();
+            newTaskman = executionOutput.second();
+        } catch (BezdelnikException be) {
+            newTaskman = this.taskman;
+            response = be.getMessage();
+        }
 
         try {
             WriteStorage.writeTaskmanToFile(taskman, saveLocation);
