@@ -6,4 +6,6 @@ Usage was limited to the following
 
 * detection of cyclic dependencies
 * code analysis
-* generation of skeletons for Javadoc documentation and user guide  
+* generation of Javadoc documentation 
+* generation of user guide skeleton
+* enforcement of Checkstyle compliance

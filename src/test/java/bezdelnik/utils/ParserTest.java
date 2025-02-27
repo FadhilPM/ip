@@ -1,15 +1,16 @@
 package bezdelnik.utils;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
 
 public class ParserTest {
 
     @Test
-    void parse_CreateDeadlineTask() {
+    void testParseCreateDeadlineTask() {
         Taskman initialTaskman = new Taskman();
         String validInput = "deadline Submit report /by 25/12/2024 1430";
 
@@ -24,12 +25,13 @@ public class ParserTest {
 
         // Test invalid deadline format
         String invalidInput = "deadline Submit report";
-        BezdelnikException be = assertThrows(BezdelnikException.class, () -> Parser.parse(invalidInput, initialTaskman));
+        BezdelnikException be = assertThrows(BezdelnikException.class, () ->
+            Parser.parse(invalidInput, initialTaskman));
         assertTrue(be.getMessage().contains("deadline"));
     }
 
     @Test
-    void parse_CreateEventTask() {
+    void testParseCreateEventTask() {
         Taskman initialTaskman = new Taskman();
         String validInput = "event Team meeting /from 25/12/2024 1430 /to 25/12/2024 1530";
 
@@ -45,7 +47,8 @@ public class ParserTest {
 
         // Test invalid event format (missing /to)
         String invalidInput = "event Team meeting /from 25/12/2024 1430";
-        BezdelnikException be = assertThrows(BezdelnikException.class, () -> Parser.parse(invalidInput, initialTaskman));
+        BezdelnikException be = assertThrows(BezdelnikException.class, () ->
+            Parser.parse(invalidInput, initialTaskman));
         assertTrue(be.getMessage().contains("event"));
     }
 }

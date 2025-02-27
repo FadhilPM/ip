@@ -1,17 +1,19 @@
 package bezdelnik.utils;
 
-import bezdelnik.tasks.Task;
-import bezdelnik.tasks.Todo;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+import bezdelnik.tasks.Task;
+import bezdelnik.tasks.Todo;
 
 public class TaskmanTest {
 
     @Test
-    void operate_ModifyTaskAndMaintainImmutability() throws BezdelnikException {
+    void testOperateModifyTaskAndMaintainImmutability() throws BezdelnikException {
         Todo initialTask = new Todo("Test task");
         Taskman taskman = new Taskman().add(initialTask);
 
@@ -31,7 +33,7 @@ public class TaskmanTest {
     }
 
     @Test
-    void filter_ReturnMatchingTasks() {
+    void testFilterReturnMatchingTasks() {
         Taskman taskman = new Taskman()
             .add(new Todo("Buy groceries"))
             .add(new Todo("Do laundry"))
@@ -51,7 +53,7 @@ public class TaskmanTest {
     }
 
     @Test
-    void concat_ShouldCombineTaskmansCorrectly() throws BezdelnikException {
+    void testConcatShouldCombineTaskmansCorrectly() throws BezdelnikException {
         Taskman taskman1 = new Taskman()
             .add(new Todo("Task 1"))
             .add(new Todo("Task 2"));
