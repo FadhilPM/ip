@@ -50,7 +50,7 @@ public class Parser {
      *
      * @param input   The user input command.
      * @param taskman The current task manager state.
-     * @return A Pair containing a response message and the updated task manager.
+     * @return A Command that encapsulates the operation to be performed on the task manager
      */
     public static Command parse(String input, Taskman taskman) throws BezdelnikException {
         assert input != null;
@@ -72,25 +72,11 @@ public class Parser {
         };
     }
 
-    /**
-     * Returns a Pair containing the list of tasks and the unchanged task manager.
-     *
-     * @param taskman The current task manager state.
-     * @return A Pair with the task list as a formatted string and the task manager.
-     */
     private static Command handleList(Taskman taskman) throws BezdelnikException {
         Command toReturn = new ListCommand(taskman);
         return toReturn;
     }
 
-    /**
-     * Marks a task as done based on the input command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the updated task manager.
-     * @throws BezdelnikException If an error occurs accessing the task.
-     */
     private static Command handleMark(String input, Taskman taskman) throws BezdelnikException {
         String[] parts = input.split(" ");
         if (parts.length != 2) {
@@ -106,14 +92,6 @@ public class Parser {
         }
     }
 
-    /**
-     * Marks a task as undone based on the input command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the updated task manager.
-     * @throws BezdelnikException If an error occurs accessing the task.
-     */
     private static Command handleUnmark(String input, Taskman taskman) throws BezdelnikException {
         String[] parts = input.split(" ");
         if (parts.length != 2) {
@@ -129,14 +107,6 @@ public class Parser {
         }
     }
 
-    /**
-     * Removes a task based on the input command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the updated task manager.
-     * @throws BezdelnikException If an error occurs accessing the task.
-     */
     private static Command handleRemove(String input, Taskman taskman) throws BezdelnikException {
         String[] parts = input.split(" ");
         if (parts.length != 2) {
@@ -151,13 +121,6 @@ public class Parser {
         }
     }
 
-    /**
-     * Adds a new Todo task based on the input command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the updated task manager.
-     */
     private static Command handleTodo(String input, Taskman taskman) throws BezdelnikException {
         String todoInput = removeFirstWord(input);
         if (todoInput.isEmpty()) {
@@ -168,13 +131,6 @@ public class Parser {
         return toReturn;
     }
 
-    /**
-     * Adds a new Deadline task based on the input command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the updated task manager.
-     */
     private static Command handleDeadline(String input, Taskman taskman) throws BezdelnikException {
         String deadlineInput = removeFirstWord(input);
         if (deadlineInput.isEmpty()) {
@@ -189,13 +145,6 @@ public class Parser {
         return toReturn;
     }
 
-    /**
-     * Adds a new Event task based on the input command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the updated task manager.
-     */
     private static Command handleEvent(String input, Taskman taskman) throws BezdelnikException {
         String eventInput = removeFirstWord(input);
         if (eventInput.isEmpty()) {
@@ -212,13 +161,6 @@ public class Parser {
         return toReturn;
     }
 
-    /**
-     * Filters tasks based on the input search command.
-     *
-     * @param input   The user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with the filtered task list as a formatted string and the unchanged task manager.
-     */
     private static Command handleFind(String input, Taskman taskman) throws BezdelnikException {
         String toSearchFor = removeFirstWord(input);
         if (toSearchFor.isEmpty()) {
@@ -229,12 +171,6 @@ public class Parser {
 
     }
 
-    /**
-     * Returns a Pair containing the list of tasks and the sorted task manager.
-     *
-     * @param taskman The current task manager state.
-     * @return A Pair with a confirmation message and the task list as a formatted string and the sorted task manager.
-     */
     private static Command handleSort(Taskman taskman) throws BezdelnikException {
         Command toReturn = new SortCommand(taskman);
         return toReturn;
@@ -247,13 +183,6 @@ public class Parser {
         return toReturn;
     }
 
-    /**
-     * Returns a default response for unsupported commands.
-     *
-     * @param input   The unsupported user input command.
-     * @param taskman The current task manager state.
-     * @return A Pair with an error message and the unchanged task manager.
-     */
     private static Command handleDefault(String input, Taskman taskman) throws BezdelnikException {
         Command toReturn = new DefaultCommand(taskman, input);
         return toReturn;
