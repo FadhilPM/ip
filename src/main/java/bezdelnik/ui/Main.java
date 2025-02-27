@@ -25,8 +25,8 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            stage.setResizable(false);
             fxmlLoader.<MainWindow>getController().setBezdelnik(bezdelnik);
+            stage.setTitle("Bezdelnik");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
