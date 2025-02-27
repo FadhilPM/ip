@@ -139,7 +139,7 @@ public class Taskman {
      * @return A new Taskman instance with a {@code List<Task>}
      */
     public Taskman sorted() {
-        return new Taskman(taskList.stream().sorted());
+        return new Taskman(taskList.stream().sorted(Comparator.reverseOrder()));
     }
 
     /**
