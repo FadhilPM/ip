@@ -1,5 +1,7 @@
 # Bezdelnik User Guide
 
+![Product screenshot](Ui.png)
+
 Bezdelnik is a versatile task management application that helps you keep track of your todos, deadlines, and events. It features both a command-line interface and a graphical user interface, allowing you to manage your tasks efficiently.
 
 ## Getting Started
