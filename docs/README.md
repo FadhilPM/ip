@@ -141,9 +141,10 @@ Aliases: `s`
 Expected output:
 ```
 3 task(s) sorted by time:
-1. [D] [] Submit assignment (by: 2025-12-25T14:30)
-2. [E] [] Team meeting (from: 2025-11-20T09:00 to: 2025-11-20T10:00)
-3. [T] [] Buy groceries
+1. [T] [] Buy groceries
+2. [D] [] Submit assignment (by: 2025-12-25T14:30)
+3. [E] [] Team meeting (from: 2025-11-20T09:00 to: 2025-11-20T10:00)
+
 ```
 
 #### Archiving Tasks
